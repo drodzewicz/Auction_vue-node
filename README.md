@@ -3,7 +3,7 @@
 **BidIt** is a web application built using Express and MongoDB on Backend, and Vue.js on Fronend. 
 <br> Final project for *Web Technologies* course.
 <br> This application can be operated using frontend app created in Vue ( uses passport-local strategy for authentication in clinet ) or any other client like Postman using seperate external API (external API uses passport-JWT strategy fro authentication).
-Application fetures:
+### Application fetures:
 * Creating an auction ``two types: time limited or buy now``
 * Full CRUD on auctions ``editing and deleting and auction can only be done before start of auction or if it's of type buy now before someone buys it ``
 * Backend and frontend pagination
