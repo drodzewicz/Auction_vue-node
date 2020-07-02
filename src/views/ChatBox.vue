@@ -116,7 +116,7 @@ export default {
                     recipientId: this.user.id
                 },
                 err => {
-                    bus.$emit("changeMessage", err, "error", "lox");
+                    bus.$emit("changeMessage", err, "error");
                 });
                 this.post = "";
             }

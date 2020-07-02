@@ -76,8 +76,8 @@ export default {
         margin-right: auto;
         color: white;
         img {
-            height: 3.5rem;
-            width: 3.5rem;
+            height: 3rem;
+            width: 3rem;
         }
     }
 
