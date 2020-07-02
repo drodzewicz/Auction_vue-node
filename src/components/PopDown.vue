@@ -25,7 +25,7 @@ export default {
             this.show = message !== this.content;
             this.content = message;
             this.messageType = type;
-            this.link = link || "/";
+            this.link = link;
         });
     },
     updated () {

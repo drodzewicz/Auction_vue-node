@@ -7,14 +7,14 @@ import store from "./store";
 
 Vue.config.productionTip = false;
 
-const API_URL = process.env.NODE_ENV === "production" ? "/" : "https://localhost:3000/";
+const API_URL = process.env.NODE_ENV === "production" ? "/" : "http://localhost:3000/";
 
 const base = axios.create({
     baseURL: API_URL,
     withCredentials: true
 });
 
-const socket = io(API_URL, { secure: true, autoConnect: false });
+const socket = io(API_URL, { autoConnect: false });
 
 Vue.prototype.$http = base;
 Vue.prototype.$sock = socket;

@@ -1,8 +1,8 @@
 "use strict";
 require("dotenv").config();
-// const http = require("http");
+const http = require("http");
 const fs = require("fs");
-const https = require("https");
+// const https = require("https");
 const cors = require("cors");
 const path = require("path");
 const logger = require("morgan");
@@ -23,11 +23,11 @@ const SESSION_KEY = process.env.SESSION_KEY || "express.sid";
 
 const app = express();
 
-// const server = http.createServer(app);
-const server = https.createServer({
-    key: fs.readFileSync(path.join(__dirname, "https", "my.key")),
-    cert: fs.readFileSync(path.join(__dirname, "https", "my.crt"))
-}, app);
+const server = http.createServer(app);
+// const server = https.createServer({
+//     key: fs.readFileSync(path.join(__dirname, "https", "my.key")),
+//     cert: fs.readFileSync(path.join(__dirname, "https", "my.crt"))
+// }, app);
 const io = socketIO(server);
 
 app.use(express.urlencoded({ extended: false }));
@@ -73,7 +73,7 @@ const auctionRoutesJWT = require("./routes/jwt/auction");
 
 app.use(cors({
     credentials: true,
-    origin: "https://localhost:8080"
+    origin: "http://localhost:8080"
 }));
 
 app
