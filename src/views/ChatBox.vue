@@ -19,8 +19,8 @@
                 </div>
             </div>
             <div class="post-input">
-                <area-text :value="post" name="message" v-model="post" />
-                <button class="blue-btn" @click="sendAMessage">send</button>
+                <area-text :value="post" name="message" :displayLabel="false" v-model="post" />
+                <button class="blue-btn" @click="sendAMessage">send <i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
@@ -30,6 +30,7 @@
 import { AreaText } from "@/components/Inputs";
 import Post from "@/components/Post.vue";
 import { mapGetters } from "vuex";
+import { bus } from "../main";
 export default {
     name: "ChatBox",
     components: {
@@ -80,7 +81,8 @@ export default {
                 this.recieveUnreadMessages();
                 this.joinChatRoom();
             } catch (error) {
-                console.log(error.response);
+                this.spinner = false;
+                bus.$emit("changeMessage", "failed to load chat", "error");
             }
         },
         getUserCountInRoom (data) {
@@ -103,9 +105,7 @@ export default {
         async recieveUnreadMessages () {
             try {
                 await this.$http.patch(`/api/chat/${this.chatId}/recieve`);
-            } catch (error) {
-                console.log(error.resposne);
-            }
+            } catch (error) {}
         },
         sendAMessage () {
             if (this.post !== "") {
@@ -116,7 +116,7 @@ export default {
                     recipientId: this.user.id
                 },
                 err => {
-                    console.log(err);
+                    bus.$emit("changeMessage", err, "error", "lox");
                 });
                 this.post = "";
             }
@@ -131,8 +131,15 @@ export default {
 </script>
 
 <style lang="scss">
+.chat-box-container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
 .chat-box {
     width: 100%;
+    max-width: 150rem;
+
     .chat-room-title {
         color: $main-dark-blue;
         display: flex;
@@ -155,7 +162,7 @@ export default {
         background: white;
         box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.381);
         border-radius: 10px;
-        height: 20rem;
+        height: 60vh;
         width: 100%;
         .conversation-section {
             width: calc(100% - 0.5rem);
@@ -172,10 +179,15 @@ export default {
         display: flex;
         flex-direction: column;
         .text-area textarea {
+            margin-top: 1rem;
             height: 10rem;
         }
         .blue-btn {
-            align-self: flex-end;
+            align-self: center;
+            .fas {
+              margin-left: 0.3rem;
+              font-size: 1rem;
+            }
         }
     }
 }

@@ -10,6 +10,7 @@
                 :value="field.value"
                 :name="field.name"
                 :type="field.type"
+                :required="field.validation.required"
                 :validation="field.validation"
                 v-on:validateField="vallidateAuctionFields"
             />
@@ -18,6 +19,7 @@
                 :value="description.value"
                 :name="description.name"
                 :validation="description.validation"
+                :required="description.validation.required"
                 v-on:validateField="vallidateAuctionFields"
             />
             <switch-button v-model="isAuction" trueLabel="buy now" falseLabel="auction" />
@@ -29,12 +31,16 @@
                     :value="field.value"
                     :name="field.name"
                     :type="field.type"
+                    :required="field.validation.required"
                     :validation="field.validation"
                     v-on:validateField="vallidateAuctionFields"
                 />
             </div>
 
-            <button class="primary-btn" type="submit" :disabled="!isReadyToSent" @click="createAuction">Create</button>
+            <button class="primary-btn" type="submit" :disabled="!isReadyToSent || spinner" @click="createAuction">
+              Create
+              <spinner-2 v-if="spinner"/>
+            </button>
         </div>
     </div>
 </template>
@@ -43,15 +49,18 @@
 import { TextInput, AreaText, SwitchButton } from "@/components/Inputs";
 import { mapGetters } from "vuex";
 import { bus } from "../main";
+import { Spinner2 } from "@/components/Spinners";
 export default {
     name: "NewAuction",
     components: {
         TextInput,
         AreaText,
+        Spinner2,
         SwitchButton
     },
     data () {
         return {
+            spinner: false,
             mainFields: [
                 {
                     isValid: true,
@@ -139,6 +148,7 @@ export default {
     methods: {
         ...mapGetters(["getUser"]),
         async createAuction () {
+            this.spinner = true;
             try {
                 const response = await this.$http.post("/api/auction", {
                     image: this.mainFields[0].value,
@@ -149,6 +159,7 @@ export default {
                     startDate: this.isAuction ? `${this.dateFields[0].value} ${this.dateFields[1].value}` : undefined,
                     endDate: this.isAuction ? `${this.dateFields[2].value} ${this.dateFields[3].value}` : undefined
                 });
+                this.spinner = false;
                 this.$router.push(`/auction/${response.data.auction._id}`);
             } catch (err) {
                 let errorMsg = "something went wrong";
@@ -158,6 +169,7 @@ export default {
                     errorMsg = err.response.data.msg.startDate;
                 }
                 bus.$emit("changeMessage", errorMsg, "error");
+                this.spinner = false;
             }
         },
         vallidateAuctionFields (fieldName, val) {

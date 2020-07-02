@@ -26,6 +26,9 @@ const auctionSchema = new Schema({
         required: [true, "field is required"],
         min: [0, "value must not be less than 0"]
     },
+    timePosted: {
+        type: Date
+    },
     startDate: {
         type: Date
     },

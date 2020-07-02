@@ -12,7 +12,11 @@ module.exports = (io, socket) => {
         if (response.msg !== undefined) {
             errorCall(response.msg);
         } else {
-            io.in(data.roomId).emit("sendBid", response);
+            io.in(data.roomId).emit("sendBid", response.newBid, data.roomId);
+            console.log(`${response.prevTopBidder} - was outbiddet`);
+            if (response.prevTopBidder) {
+                socket.to(response.prevTopBidder).emit("chatUserBidInfo", { roomId: data.roomId, auctionName: response.auctionName });
+            }
         }
     });
 

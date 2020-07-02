@@ -3,13 +3,11 @@
         <nav class="profile-nav" :class="{hide: !showSubNavBar}">
             <ul class="profile-navigation-tab">
                 <button class="menu-button" @click="toggleSubNav"><i class="fas fa-times"></i></button>
-                <router-link class="profile-nav-item" to="/profile/my-auctions">My Auctions</router-link>
-                <router-link
-                    class="profile-nav-item"
-                    to="/profile/live-auctions"
+                <router-link @click.native="toggleSubNav" class="profile-nav-item" to="/profile/my-auctions">My Auctions</router-link>
+                <router-link @click.native="toggleSubNav" class="profile-nav-item" to="/profile/live-auctions"
                 >Live Auction Pannel</router-link>
-                <router-link class="profile-nav-item" to="/profile/participated">Participations</router-link>
-                <router-link class="profile-nav-item" to="/profile/purchased">Purchased</router-link>
+                <router-link @click.native="toggleSubNav" class="profile-nav-item" to="/profile/participated">Participations</router-link>
+                <router-link @click.native="toggleSubNav" class="profile-nav-item" to="/profile/purchased">Purchased</router-link>
             </ul>
         </nav>
         <div class="profile-content">
@@ -24,7 +22,7 @@ export default {
     name: "Profile",
     data () {
         return {
-            showSubNavBar: true
+            showSubNavBar: false
         };
     },
     methods: {

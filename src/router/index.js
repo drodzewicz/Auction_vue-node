@@ -17,57 +17,71 @@ import ChatBox from "../views/ChatBox.vue";
 
 import store from "../store";
 
+const notAuthenticatedUserHandler = (to, from, next) => {
+    if (store.getters.getUser) {
+        next();
+    } else {
+        store.watch(() => store.getters.getUser, () => {
+            if (store.getters.getUser !== null) {
+                next();
+            } else {
+                next("/login");
+            }
+        });
+    }
+};
+const changeTitle = (to, from, next) => {
+    const { title } = to.meta;
+    document.title = typeof title === "function" ? title(to.params.id) : title;
+    next();
+};
+
 Vue.use(VueRouter);
 
 const routes = [
     {
         path: "/",
         name: "Home",
-        component: Home
+        component: Home,
+        meta: { title: "bidit | Home" }
     },
     {
         path: "/login",
         name: "Login",
-        component: Login
+        component: Login,
+        meta: { title: "bidit | Login" }
     },
     {
         path: "/register",
         name: "Register",
-        component: Register
+        component: Register,
+        meta: { title: "bidit | Register" }
     },
     {
         path: "/new-auction",
         name: "NewAuction",
         component: NewAuction,
-        beforeEnter: (to, from, next) => {
-            if (store.state.user.user === null) {
-                next("/login");
-            } else {
-                next();
-            }
-        }
+        meta: { title: "bidit | Create New Auction" },
+        beforeEnter: notAuthenticatedUserHandler
     },
     {
         path: "/auction/:id",
         name: "AuctionShow",
-        component: AuctionShow
+        component: AuctionShow,
+        meta: { title: id => `bidit | auction ${id}` }
     },
     {
         path: "/auction/:id/edit",
         name: "EditAuction",
-        component: EditAuction
+        component: EditAuction,
+        meta: { title: "bidit | Edit" }
     },
     {
         path: "/profile",
         name: "Profile",
         component: Profile,
-        beforeEnter: (to, from, next) => {
-            if (store.state.user.user === null) {
-                next("/login");
-            } else {
-                next();
-            }
-        },
+        meta: { title: "bidit | Profile" },
+        beforeEnter: notAuthenticatedUserHandler,
         redirect: {
             name: "MyAuctions"
         },
@@ -75,22 +89,26 @@ const routes = [
             {
                 name: "LiveAuctions",
                 path: "live-auctions",
-                component: MyLiveAuctions
+                component: MyLiveAuctions,
+                meta: { title: "bidit | Profile - live auctions" }
             },
             {
                 name: "MyAuctions",
                 path: "my-auctions",
-                component: MyAuctions
+                component: MyAuctions,
+                meta: { title: "bidit | Profile - my auctions" }
             },
             {
                 name: "Participated",
                 path: "participated",
-                component: ParticipatedAuctions
+                component: ParticipatedAuctions,
+                meta: { title: "bidit | Profile - participated auctions" }
             },
             {
                 name: "Purchased",
                 path: "purchased",
-                component: Purchased
+                component: Purchased,
+                meta: { title: "bidit | Profile - purchased" }
             }
         ]
     },
@@ -98,22 +116,19 @@ const routes = [
         path: "/chat",
         name: "Chat",
         component: Chat,
+        meta: { title: "bidit | Chat" },
         children: [{
             path: ":id",
-            component: ChatBox
+            component: ChatBox,
+            meta: { title: id => `bidit | Chat ${id}` }
         }],
-        beforeEnter: (to, from, next) => {
-            if (store.state.user.user === null) {
-                next("/login");
-            } else {
-                next();
-            }
-        }
+        beforeEnter: notAuthenticatedUserHandler
     },
     {
         path: "/error-notfound",
         name: "ErrorPage",
-        component: ErrorPage
+        component: ErrorPage,
+        meta: { title: "bidit | Error" }
     },
     {
         path: "/*",
@@ -128,5 +143,7 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes
 });
+
+router.beforeEach(changeTitle);
 
 export default router;

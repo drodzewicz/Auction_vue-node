@@ -1,5 +1,12 @@
 const checkValidation = (value, rules) => {
     //   required
+    if (rules.matchString) {
+        const rule = value.trim() === rules.matchString;
+        if (!rule) {
+            return "password does not match";
+        }
+    }
+    //   required
     if (rules.required) {
         const rule = value.trim() !== "";
         if (!rule) {

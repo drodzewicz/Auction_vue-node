@@ -13,9 +13,9 @@ auctionService.getAuctions = async function (req, res) {
 
     // query parameter for searching auctions that have ended or ongoing
     if (finished !== undefined && finished.toUpperCase() === "TRUE") {
-        searchQuery = { endDate: { $lt: timeNow } };
+        searchQuery = { $or: [{ endDate: { $not: { $gte: timeNow } }, buyer: { $exists: true } }, { endDate: { $lt: timeNow } }] };
     } else if (finished !== undefined && finished.toUpperCase() === "FALSE") {
-        searchQuery = { endDate: { $gt: timeNow } };
+        searchQuery = { $or: [{ endDate: { $not: { $lte: timeNow } }, buyer: { $exists: false } }, { endDate: { $gt: timeNow } }] };
     }
 
     // pagination
@@ -106,7 +106,8 @@ auctionService.getLoggedInUserLiveAuctions = async function (req, res) {
 
 auctionService.getLoggedInUserPurchases = async function (req, res) {
     const { page, limit } = req.query;
-    const searchQuery = { "buyer.username": req.user.username };
+    const timeNow = new Date();
+    const searchQuery = { "buyer.username": req.user.username, endDate: { $not: { $gt: timeNow } } };
 
     if (page !== undefined && limit !== undefined) {
         const paginatedAuctions = await paginateConetnt(Auction, page, limit, searchQuery);
@@ -133,6 +134,7 @@ auctionService.createNewAuction = async function (req, res) {
         description: req.body.description,
         tags: req.body.tags,
         price: req.body.price,
+        timePosted: new Date(),
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         image: req.body.image,
@@ -216,7 +218,7 @@ auctionService.buyNow = async function (req, res) {
         auction.save();
         res.status(200).json({
             username: req.user.username,
-            msg: "succefully bought item"
+            msg: "successfully bought item"
         });
     } catch (error) {
         res.status(400).json({

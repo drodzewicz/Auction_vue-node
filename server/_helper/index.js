@@ -7,7 +7,7 @@ helperFunctions.paginateConetnt = async (model, page, limit, query) => {
     limit = parseInt(limit);
 
     try {
-        const modelList = await model.find(searchQuery).sort({ endDate: -1 });
+        const modelList = await model.find(searchQuery).sort({ timePosted: -1 });
         const startIndex = (page - 1) * limit;
         const endIndex = page * limit;
 

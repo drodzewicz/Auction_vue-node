@@ -1,6 +1,6 @@
 <template>
     <div class="text-area">
-        <label for="username">{{`${(validation && validation.required) ? "* " : ""} ${name}:`}}</label>
+        <label v-if="displayLabel" for="username">{{`${required ? "* " : ""} ${name}:`}}</label>
         <textarea
             :name="name"
             :class="{error: error.length > 0}"
@@ -25,6 +25,13 @@ export default {
         },
         validation: {
             type: Object
+        },
+        required: {
+            type: Boolean
+        },
+        displayLabel: {
+            type: Boolean,
+            default: true
         }
     },
     data () {

@@ -2,11 +2,13 @@ import router from "@/router";
 import vueInstance from "@/main";
 
 const state = {
-    user: null
+    user: false,
+    userId: null
 };
 
 const getters = {
-    getUser: (state) => state.user
+    getUser: (state) => state.user,
+    GET_USERID: (state) => state.userId
 };
 
 const actions = {
@@ -15,6 +17,7 @@ const actions = {
             .then(() => {
                 vueInstance.$sock.close();
                 commit("UPDATE_USER", null);
+                commit("UPDATE_USERID", null);
                 router.push("/").catch(() => { });
             });
     }
@@ -23,6 +26,9 @@ const actions = {
 const mutations = {
     UPDATE_USER (state, username) {
         state.user = username;
+    },
+    UPDATE_USERID (state, userId) {
+        state.userId = userId;
     }
 };
 

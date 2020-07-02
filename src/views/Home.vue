@@ -3,6 +3,7 @@
         <div class="btn-container">
             <router-link v-if="getUsername" class="primary-btn" to="/new-auction">Create new auction</router-link>
         </div>
+        <spinner-1 v-if="auctions.spinner"/>
         <div v-if="!auctions.spinner" class="home-auction-container">
             <auction-card
                 v-for="li in auctions.list"
@@ -11,7 +12,7 @@
                 :name="li.name"
                 :descriptions="li.description"
                 :image="li.image"
-                :price="li.price"
+                :price="li.bids.length > 0 ? li.bids[li.bids.length - 1].price : li.price"
                 :endDate="new Date(li.endDate)"
                 :startDate="new Date(li.startDate)"
             />
@@ -28,14 +29,15 @@
 <script>
 import { AuctionCard } from "@/components/AuctionCards";
 import Pagination from "@/components/Pagination";
+import { Spinner1 } from "@/components/Spinners";
 import { mapGetters } from "vuex";
-import { bus } from "../main";
 
 export default {
     name: "Home",
     components: {
         AuctionCard,
-        Pagination
+        Pagination,
+        Spinner1
     },
     data () {
         return {
@@ -51,30 +53,20 @@ export default {
     },
     created () {
         this.fetchAuctions();
-        this.getUnreadMessageRooms();
     },
     methods: {
         ...mapGetters(["getUser"]),
         async fetchAuctions () {
+            this.auctions.spinner = true;
             try {
-                const reposne = await this.$http.get(`/api/auction?page=${this.auctions.currentPage}&limit=6`);
+                const reposne = await this.$http.get(`/api/auction?page=${this.auctions.currentPage}&limit=6&finished=false`);
                 const { items, next, prev } = reposne.data.auctions;
                 this.auctions.list = items;
                 this.auctions.nextPage = next;
                 this.auctions.prevPage = prev;
                 this.auctions.spinner = false;
             } catch (error) {
-                console.log(error.reposne);
-            }
-        },
-        async getUnreadMessageRooms () {
-            try {
-                const unreadChatRooms = await this.$http.get("/api/chat/unread-messages");
-                if (unreadChatRooms.data.chatRooms.length > 0) {
-                    bus.$emit("changeMessage", `you have ${unreadChatRooms.data.chatRooms.length} unread messages`, "");
-                }
-            } catch (error) {
-                console.log("err", error);
+                this.auctions.spinner = false;
             }
         }
     },
@@ -118,9 +110,14 @@ export default {
         flex-direction: row;
         flex-wrap: wrap;
         margin: 0 5%;
+        min-height: 40rem;
+        max-width: 90rem;
         justify-content: center;
         & > * {
             margin: 0 1rem;
+        }
+        .pagination-container {
+          align-self: flex-end;
         }
     }
     .btn-container {

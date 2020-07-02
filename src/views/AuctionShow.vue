@@ -1,5 +1,7 @@
 <template>
-    <div class="auction-show-container">
+    <div class="auction-show-wrapper">
+      <spinner-1  v-if="spinner" />
+      <div  v-if="!spinner" class="auction-show-container">
         <section class="auction-image">
             <v-image :imageUrl="image" />
         </section>
@@ -25,7 +27,7 @@
                     <span class="currency">{{this.GET_CURRENCY()}}</span>
                 </span>
                 <button
-                    v-if="startDate===undefined && buyer===undefined && getUser()"
+                    v-if="startDate===undefined && buyer===undefined && getUser() && !isUserAuthor"
                     class="buy-now-btn primary-btn"
                     @click="buyAuction"
                 >Buy Now</button>
@@ -55,13 +57,13 @@
               <div class="bid-table">
                   <span class="live-coundown">
                     <timer
-                      v-if="loaded"
+                      v-if="!spinner"
                       :startDate="new Date(startDate)"
                       :endDate="new Date(endDate)"
                       v-on:timerStatus="setAuctionStatus"
                     />
                   </span>
-                  <place-bid-input v-if="this.isAuctionLive && getUser()" :auctionId="id" />
+                  <place-bid-input v-if="this.isAuctionLive && getUser() && !isUserAuthor" :auctionId="id" />
                   <div class="bid-box">
                       <bid-card
                           v-for="bid in bids"
@@ -74,6 +76,7 @@
               </div>
           </div>
         </div>
+      </div>
     </div>
 </template>
 
@@ -83,6 +86,7 @@ import BidCard from "@/components/BidCard";
 import moment from "moment";
 import VImage from "@/components/VImage";
 import Timer from "@/components/Timer";
+import { Spinner1 } from "@/components/Spinners";
 import { mapGetters } from "vuex";
 import { bus } from "../main";
 export default {
@@ -91,11 +95,12 @@ export default {
         BidCard,
         PlaceBidInput,
         VImage,
-        Timer
+        Timer,
+        Spinner1
     },
     data () {
         return {
-            loaded: false,
+            spinner: true,
             isAuctionLive: false,
             id: null,
             name: "",
@@ -154,8 +159,9 @@ export default {
             try {
                 const response = await this.$http.patch(`api/auction/${this.id}/buy`);
                 bus.$emit("changeMessage", response.data.msg, "success");
+                this.buyer = this.getUser();
             } catch (error) {
-                console.log(error.response);
+                bus.$emit("changeMessage", "failed to buy auction", "error");
             }
         },
         async getAuctionInfo () {
@@ -179,9 +185,10 @@ export default {
                 if (this.startDate !== undefined && this.endDate !== undefined) {
                     this.isAuctionLive = this.isStarted && !this.isEnded;
                 }
-                this.loaded = true;
+                this.spinner = false;
             } catch (error) {
-                this.loaded = true;
+                bus.$emit("changeMessage", "failed to buy auction", "error");
+                this.spinner = false;
                 this.$router.replace("/error-notfound");
             }
         },
@@ -203,12 +210,22 @@ export default {
 </script>
 
 <style lang="scss">
+.auction-show-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .spinner-1{
+        align-self: center;
+    }
+}
 .auction-show-container {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
     flex-wrap: wrap;
+    max-width: 100rem;
     @include breaking-point-sm {
         flex-direction: column;
     }
@@ -220,9 +237,10 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 50%;
+        margin-right: 2rem;
         @include breaking-point-sm {
             width: auto;
+            margin-right: 0;
         }
 
         img {
@@ -240,9 +258,10 @@ export default {
         justify-content: flex-start;
         align-items: flex-start;
         margin: 1rem 0;
-        width: 50%;
+        margin-left: 2rem;
         @include breaking-point-sm {
             width: 20rem;
+            margin-left: 0;
         }
 
         .auction-title {
@@ -285,6 +304,7 @@ export default {
         justify-content: center;
         align-items: center;
         flex-grow: 1;
+        width: 100%;
 
         .bid-table-wrapper{
           .banner {

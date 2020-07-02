@@ -4,7 +4,8 @@
         <div class="chat-rooms" :class="{hide: hideRooms}">
             <button class="toggle-btn-hide" @click="toggleHideRooms"><i class="fas fa-times"></i></button>
             <search-bar v-model="searchQuery" v-on:search="searchUserByUsername" />
-            <div v-if="searchedUsers.length === 0" class="my-rooms">
+            <spinner-1 v-if="this.myChatRooms.spinner || this.searchedUsers.spinner" />
+            <div v-if="searchedUsers.users.length === 0 && !this.myChatRooms.spinner && !this.searchedUsers.spinner" class="my-rooms">
                 <div
                     @click="gotToChat(room.id)"
                     class="room"
@@ -14,13 +15,13 @@
                 <span class="username">{{room.username}}</span>
                 <span v-if="room.unreadMessages" class="dot"></span></div>
             </div>
-            <div v-if="searchedUsers.length > 0" class="searched-users">
+            <div v-if="searchedUsers.users.length > 0 && !this.searchedUsers.spinner" class="searched-users">
                 <button class="clear-btn" @click="clearSearchResults">clear</button>
                 <div
                     class="room"
-                    v-for="user in searchedUsers"
+                    v-for="(user, index) in searchedUsers.users"
                     :key="user.id"
-                    @click="createChatRoom(user.username)"
+                    @click="createChatRoom(user.username, index)"
                 >
                     {{user.username}}
                 </div>
@@ -35,25 +36,27 @@
 <script>
 import { SearchBar } from "@/components/Inputs";
 import { mapGetters } from "vuex";
+import { Spinner1 } from "../components/Spinners";
 import { bus } from "../main";
 
 export default {
     name: "Chat",
     components: {
-        SearchBar
+        SearchBar,
+        Spinner1
     },
     data () {
         return {
-            hideRooms: false,
+            hideRooms: true,
             searchQuery: "",
-            myChatRooms: [],
-            searchedUsers: []
+            myChatRooms: { spinner: false, rooms: [] },
+            searchedUsers: { spinner: false, users: [] }
         };
     },
     created () {
         this.getMyChatRooms();
         bus.$on("markUnreadMessage", (roomId) => {
-            this.myChatRooms = this.myChatRooms.map(room => room._id === roomId ? ({ ...room, unreadMessages: true }) : room);
+            this.myChatRooms.rooms = this.myChatRooms.rooms.map(room => room._id === roomId ? ({ ...room, unreadMessages: true }) : room);
         });
     },
     methods: {
@@ -62,49 +65,57 @@ export default {
             this.hideRooms = !this.hideRooms;
         },
         gotToChat (roomId) {
-            this.myChatRooms = this.myChatRooms.map(room => room._id === roomId ? ({ ...room, unreadMessages: false }) : room);
+            this.myChatRooms.rooms = this.myChatRooms.rooms.map(room => room._id === roomId ? ({ ...room, unreadMessages: false }) : room);
+            this.toggleHideRooms();
             this.$router.push(`/chat/${roomId}`).catch(() => {});
         },
         async getMyChatRooms () {
+            this.myChatRooms.spinner = true;
             try {
-                const mychatRooms = await this.$http.get("/api/chat/my-chat");
+                const mychatRoomsFetched = await this.$http.get("/api/chat/my-chat");
                 const unreadChatRooms = await this.$http.get("/api/chat/unread-messages");
-                this.myChatRooms = mychatRooms.data.chatRooms.map(room => {
+                this.myChatRooms.spinner = false;
+                this.myChatRooms.rooms = mychatRoomsFetched.data.chatRooms.map(room => {
                     if (unreadChatRooms.data.chatRooms.find(unreadRoom => unreadRoom._id === room._id)) {
                         return ({ ...room, unreadMessages: true });
                     }
                     return ({ ...room, unreadMessages: false });
                 });
             } catch (error) {
-                console.log(error.response);
+                this.myChatRooms.spinner = false;
             }
         },
         async searchUserByUsername () {
+            this.searchedUsers.spinner = true;
             try {
                 const response = await this.$http.get(`/api/chat/users?username=${this.searchQuery}`);
                 let tempList = response.data.users.filter(user => user.username !== this.getUser());
                 tempList = tempList.filter(user => !this.lsitOfContacts.find(room => room.username === user.username));
-                this.searchedUsers = tempList.map(user => ({ id: user._id, username: user.username }));
+                this.searchedUsers.spinner = false;
+                this.searchedUsers.users = tempList.map(user => ({ id: user._id, username: user.username }));
             } catch (error) {
-                console.log(error.response);
+                bus.$emit("changeMessage", error.response.msg, "error");
+                this.searchedUsers.spinner = false;
             }
         },
         clearSearchResults () {
-            this.searchedUsers = [];
+            this.searchedUsers.users = [];
         },
-        async createChatRoom (username) {
+        async createChatRoom (username, index) {
             try {
                 const response = await this.$http.post(`/api/chat/${username}`);
                 const room = response.data.chatRoom;
-                this.myChatRooms.push(room);
+                this.myChatRooms.rooms.push(room);
+                this.searchedUsers.users.splice(index, 1);
+                this.clearSearchResults();
             } catch (error) {
-                console.log(error.response);
+                bus.$emit("changeMessage", error.response.msg, "error");
             }
         }
     },
     computed: {
         lsitOfContacts () {
-            return this.myChatRooms.map(room => {
+            return this.myChatRooms.rooms.map(room => {
                 return {
                     id: room._id,
                     username: room.participants
@@ -121,8 +132,6 @@ export default {
 <style lang="scss">
 $side-bar-width: 14rem;
 .chat-container {
-    position: relative;
-
     .chat-wrap {
         margin-right: $side-bar-width + 1rem;
         @include mobile {
@@ -153,7 +162,7 @@ $side-bar-width: 14rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: fixed;
+    position: absolute;
     padding: 1rem 0.2rem;
     overflow: scroll;
     transition: 0.3s all ease-in-out;
@@ -224,6 +233,7 @@ $side-bar-width: 14rem;
             display: block;
             border-radius: 10rem;
             margin-left: 1rem;
+            margin-right: 1rem;
         }
     }
 }

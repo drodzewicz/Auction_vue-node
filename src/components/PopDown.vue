@@ -1,6 +1,6 @@
 <template>
-    <div class="pop-down-overlay">
-        <div v-if="show" class="pop-down-container" :class="messageType">
+    <div @click="goToLink" class="pop-down-overlay" :class="{link: !!link}">
+        <div class="pop-down-container" :class="[{show}, messageType]" >
             <span class="content">{{this.content}}</span>
             <button class="exit" @click="hideMessage"><i class="fas fa-times"></i></button>
         </div>
@@ -16,14 +16,16 @@ export default {
             show: false,
             content: "",
             messageType: "",
-            timer: ""
+            timer: "",
+            link: undefined
         };
     },
     created () {
-        bus.$on("changeMessage", (message, type) => {
+        bus.$on("changeMessage", (message, type, link) => {
             this.show = message !== this.content;
             this.content = message;
             this.messageType = type;
+            this.link = link || "/";
         });
     },
     updated () {
@@ -31,6 +33,7 @@ export default {
             this.content = "";
             this.messageType = "";
             this.show = false;
+            this.link = undefined;
         }, 5000);
     },
     watch: {
@@ -43,6 +46,11 @@ export default {
     methods: {
         hideMessage () {
             this.show = false;
+        },
+        goToLink () {
+            if (this.link) {
+                this.$router.push(this.link).catch(() => {});
+            }
         }
     }
 };
@@ -55,8 +63,11 @@ export default {
     width: 100%;
     justify-content: flex-start;
     align-items: center;
+    &.link {
+      cursor: pointer;
+    }
     .pop-down-container {
-        top: 2rem;
+        top: 0;
         background: rgb(211, 211, 211);
         position: fixed;
         width: 30rem;
@@ -66,8 +77,14 @@ export default {
         border: 1px solid grey;
         display: flex;
         flex-grow: 1;
+        z-index: 5;
+        transform: translateY(-150%);
+        transition: 0.3s all ease-in-out;
         @include mobile {
             width: 20rem;
+        }
+        &.show {
+          transform: translateY(100%);
         }
 
         &.success {

@@ -11,9 +11,13 @@
             </div>
             <div class="time-count-down-label">
                 <span class="time">
+                  <span v-if="isNaN(this.startDate)">
+                    Buy Now
+                  </span>
                   <timer
-                      :startDate="new Date(startDate)"
-                      :endDate="new Date(endDate)"
+                      v-if="!isNaN(this.startDate)"
+                      :startDate="startDate"
+                      :endDate="endDate"
                     />
                 </span>
                 <span class="price">{{`${price} ${GET_CURRENCY()}`}}</span>

@@ -14,6 +14,7 @@
                 :value="field.value"
                 :name="field.name"
                 :type="field.type"
+                :required="field.validation.required"
                 :validation="field.validation"
                 v-on:validateField="validateAuctionFields"
             />
@@ -21,6 +22,7 @@
                 v-model="description.value"
                 :value="description.value"
                 :name="description.name"
+                :required="description.required"
                 :validation="description.validation"
                 v-on:validateField="validateAuctionFields"
             />
@@ -33,12 +35,16 @@
                     :value="field.value"
                     :name="field.name"
                     :type="field.type"
+                    :required="field.validation.required"
                     :validation="field.validation"
                     v-on:validateField="validateAuctionFields"
                 />
             </div>
 
-            <button class="primary-btn" type="submit" @click="updateAuction" :disabled="!isReadyToUpdate">Update</button>
+            <button class="primary-btn" type="submit" @click="updateAuction" :disabled="!isReadyToUpdate || spinner">
+              Update
+              <spinner-2 v-if="spinner"/>
+            </button>
         </div>
     </div>
 </template>
@@ -46,7 +52,7 @@
 <script>
 import { TextInput, AreaText, SwitchButton } from "@/components/Inputs";
 import { mapGetters } from "vuex";
-// import moment from "moment";
+import { Spinner2 } from "@/components/Spinners";
 import { bus } from "../main";
 
 export default {
@@ -54,10 +60,12 @@ export default {
     components: {
         TextInput,
         AreaText,
+        Spinner2,
         SwitchButton
     },
     data () {
         return {
+            spinner: false,
             id: "",
             author: "",
             buyer: "",
@@ -166,11 +174,11 @@ export default {
                 this.description.value = description;
                 this.isAuction = endDate !== undefined;
 
-                this.startDate = startDate;
+                this.startDate = new Date(startDate);
                 this.dateFields[0].value = startDate !== undefined ? startDate.substring(0, 10) : "";
-                this.dateFields[1].value = startDate !== undefined ? startDate.substring(11, 16) : "";
+                this.dateFields[1].value = startDate !== undefined ? new Date(startDate).toLocaleTimeString("it-IT") : "";
                 this.dateFields[2].value = startDate !== undefined ? endDate.substring(0, 10) : "";
-                this.dateFields[3].value = startDate !== undefined ? endDate.substring(11, 16) : "";
+                this.dateFields[3].value = startDate !== undefined ? new Date(endDate).toLocaleTimeString("it-IT") : "";
 
                 if (!this.isUserAuthor) {
                     bus.$emit("changeMessage", "you are not authorized to do this", "error");
@@ -183,6 +191,7 @@ export default {
                     this.$router.replace("/");
                 }
             } catch (error) {
+                bus.$emit("changeMessage", "failed to load auction", "error");
                 this.$router.replace("/error-notfound");
             }
         },
@@ -254,8 +263,7 @@ export default {
         },
         isStarted () {
             const timeNow = new Date();
-            const startDateParsed = new Date(this.startDate);
-            return timeNow >= startDateParsed;
+            return timeNow >= this.startDate;
         },
         isEditable () {
             return (!this.isStarted && this.isUserAuthor && (this.buyer === "" || this.buyer === undefined)

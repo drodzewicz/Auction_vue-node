@@ -1,6 +1,7 @@
 <template>
     <div class="participated-auction-container">
         <h2>Participated auctions</h2>
+        <spinner-1 v-if="auctions.spinner"/>
         <div v-if="!auctions.spinner" class="aucion-box">
             <auction-card-mini
                 v-for="li in auctions.list"
@@ -25,11 +26,13 @@
 <script>
 import AuctionCardMini from "@/components/AuctionCards/AuctionCardMini";
 import Pagination from "@/components/Pagination";
+import { Spinner1 } from "@/components/Spinners";
 export default {
     name: "MyAuctions",
     components: {
         AuctionCardMini,
-        Pagination
+        Pagination,
+        Spinner1
     },
     data () {
         return {
@@ -46,20 +49,17 @@ export default {
         this.getAllAuthorAuction();
     },
     methods: {
-        getAllAuthorAuction () {
-            this.$http
-                .get(
-                    `/api/user/participations?limit=5&page=${this.auctions.currentPage}`
-                )
-                .then(res => {
-                    this.auctions.list = res.data.auctions.items;
-                    this.auctions.nextPage = res.data.auctions.next;
-                    this.auctions.prevPage = res.data.auctions.prev;
-                    this.auctions.spinner = false;
-                })
-                .catch(err => {
-                    console.log(err.respnse);
-                });
+        async getAllAuthorAuction () {
+            this.auctions.spinner = true;
+            try {
+                const response = await this.$http.get(`/api/user/participations?limit=5&page=${this.auctions.currentPage}`);
+                this.auctions.list = response.data.auctions.items;
+                this.auctions.nextPage = response.data.auctions.next;
+                this.auctions.prevPage = response.data.auctions.prev;
+                this.auctions.spinner = false;
+            } catch (error) {
+                this.auctions.spinner = false;
+            }
         }
     },
     computed: {

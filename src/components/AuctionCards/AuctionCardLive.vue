@@ -83,8 +83,10 @@ export default {
     },
     methods: {
         ...mapGetters(["getUser"]),
-        senfBid (data) {
-            this.bids.unshift(data);
+        senfBid (data, roomId) {
+            if (roomId === this.id) {
+                this.bids.unshift(data);
+            }
         },
         joinBiddingRoom () {
             this.$sock.emit("joinBidding", { room: this.id });

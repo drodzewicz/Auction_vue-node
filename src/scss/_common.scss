@@ -14,7 +14,7 @@ $main-yellow: #ffc830;
   }
 }
 @mixin breaking-point-sm {
-  @media (max-width: #{750px}) {
+  @media (max-width: #{850px}) {
     @content;
   }
 }
@@ -35,6 +35,10 @@ $main-yellow: #ffc830;
   transition: all ease-in-out 0.3s;
   text-decoration: none;
   outline: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .secondary-btn {

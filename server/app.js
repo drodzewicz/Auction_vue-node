@@ -63,11 +63,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // ROUTES
-const profileRoutes = require("./routes/profile");
-const authenticationRoutes = require("./routes/auth");
-const auctionRoutes = require("./routes/auction");
-const chatRoutes = require("./routes/chat");
-const auctionRoutesJWT = require("./routes/auction-jwt");
+// http
+const profileRoutes = require("./routes/http/profile");
+const authenticationRoutes = require("./routes/http/auth");
+const auctionRoutes = require("./routes/http/auction");
+const chatRoutes = require("./routes/http/chat");
+// jwt
+const auctionRoutesJWT = require("./routes/jwt/auction");
 
 app.use(cors({
     credentials: true,

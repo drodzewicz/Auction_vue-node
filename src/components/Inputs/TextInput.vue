@@ -1,6 +1,6 @@
 <template>
     <div class="text-input">
-        <label for="username">{{`${validation.required ? "* " : ""}${name}:`}}</label>
+        <label v-if="displayLabel" for="username">{{`${required ? "* " : ""}${name}:`}}</label>
         <input
             :min="min"
             :type="type"
@@ -31,6 +31,13 @@ export default {
         },
         name: {
             type: String
+        },
+        required: {
+            type: Boolean
+        },
+        displayLabel: {
+            type: Boolean,
+            default: true
         },
         validation: {
             type: Object

@@ -1,6 +1,7 @@
 <template>
     <div class="live-auctioncontainer">
         <h2>Live auctions</h2>
+        <spinner-1 v-if="myLiveAuctions.spinner"/>
         <div v-if="!myLiveAuctions.spinner">
             <auction-card-live
                 v-for="auction in myLiveAuctions.auctions"
@@ -18,11 +19,13 @@
 
 <script>
 import { AuctionCardLive } from "@/components/AuctionCards";
+import { Spinner1 } from "@/components/Spinners";
 
 export default {
     name: "MyLiveAuctions",
     components: {
-        AuctionCardLive
+        AuctionCardLive,
+        Spinner1
     },
     data () {
         return {
@@ -38,16 +41,15 @@ export default {
         this.getAllParticipatedInAuction();
     },
     methods: {
-        getAllParticipatedInAuction () {
-            this.$http
-                .get("/api/user/live-auctions")
-                .then(res => {
-                    this.myLiveAuctions.auctions = res.data.auctions;
-                    this.myLiveAuctions.spinner = false;
-                })
-                .catch(err => {
-                    console.log(err.respnse);
-                });
+        async getAllParticipatedInAuction () {
+            this.myLiveAuctions.spinner = true;
+            try {
+                const response = await this.$http.get("/api/user/live-auctions");
+                this.myLiveAuctions.auctions = response.data.auctions;
+                this.myLiveAuctions.spinner = false;
+            } catch (error) {
+                this.myLiveAuctions.spinner = false;
+            }
         }
     }
 };

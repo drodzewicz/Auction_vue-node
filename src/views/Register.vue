@@ -12,24 +12,30 @@
                 :type="field.type"
                 :validation="field.validation"
                 :error="field.error"
+                :required="field.validation.required"
                 v-on:validateField="validateFieldLogin"
             />
-
-            <button class="primary-btn" :disabled="!isReadyToSent" @click="registerUser">Register</button>
+            <button class="primary-btn" :disabled="!isReadyToSent || spinner" @click="registerUser">
+              Register
+              <spinner-2 v-if="spinner" />
+            </button>
         </div>
     </div>
 </template>
 
 <script>
 import { TextInput } from "@/components/Inputs";
+import { Spinner2 } from "@/components/Spinners";
 import { bus } from "../main";
 export default {
     name: "Register",
     components: {
-        TextInput
+        TextInput,
+        Spinner2
     },
     data () {
         return {
+            spinner: false,
             loginFields: [
                 {
                     isValid: false,
@@ -48,7 +54,21 @@ export default {
                     name: "password",
                     value: "",
                     error: "",
+                    type: "password",
                     validation: {
+                        required: true,
+                        spaces: false,
+                        minLength: 5
+                    }
+                },
+                {
+                    isValid: false,
+                    name: "repeat password",
+                    value: "",
+                    error: "",
+                    type: "password",
+                    validation: {
+                        matchString: "",
                         required: true,
                         spaces: false,
                         minLength: 5
@@ -59,12 +79,14 @@ export default {
     },
     methods: {
         async registerUser () {
+            this.spinner = true;
             try {
                 await this.$http.post("/api/auth/register", {
                     username: this.loginFields[0].value,
                     password: this.loginFields[1].value
                 });
                 bus.$emit("changeMessage", "succefully registered", "success");
+                this.spinner = false;
                 this.$router.push("/login");
             } catch (err) {
                 const errorMsg = err.response.data.msg;
@@ -75,6 +97,7 @@ export default {
                             : field
                     );
                 }
+                this.spinner = false;
             }
         },
         validateFieldLogin (fieldName, val) {
@@ -88,11 +111,19 @@ export default {
         }
     },
     computed: {
+        matchPassword () {
+            return this.loginFields[1].value;
+        },
         isReadyToSent () {
             return this.loginFields.reduce(
                 (sum, next) => sum && next.isValid,
                 true
             );
+        }
+    },
+    watch: {
+        matchPassword (newVal) {
+            this.loginFields[2].validation.matchString = newVal;
         }
     }
 };
@@ -117,6 +148,10 @@ export default {
     .primary-btn {
         margin-top: 1rem;
         font-size: 1.5rem;
+        position: relative;
+        .spinner-2 {
+          position: absolute;
+        }
     }
 }
 </style>

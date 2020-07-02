@@ -27,11 +27,20 @@ auctionService.placeABid = async function (auctionId, bidPrice, bidAuthor) {
                 author,
                 timeStamp: new Date()
             };
+            foundAuction.buyer = author;
+            let prevTopBidder;
+            if (foundAuction.bids.length > 0) {
+                prevTopBidder = foundAuction.bids[foundAuction.bids.length - 1].author.id;
+            }
             foundAuction.bids.push(newBid);
             await foundAuction.save();
-            return newBid;
+            return {
+                newBid,
+                prevTopBidder: author.id.toLocaleString() !== prevTopBidder.toLocaleString() ? prevTopBidder.toLocaleString() : undefined,
+                auctionName: foundAuction.name
+            };
         }
-        return { msg: "auctions is not active" };
+        return { msg: "auction is not active" };
     } catch (error) {
         return { msg: Auction.processErrors(error) };
     }

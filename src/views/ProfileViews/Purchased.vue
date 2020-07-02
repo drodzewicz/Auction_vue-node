@@ -1,6 +1,7 @@
 <template>
     <div class="purhased-auction-container">
         <h2>Purchased auctions</h2>
+        <spinner-1 v-if="auctions.spinner"/>
         <div v-if="!auctions.spinner" class="aucion-box">
             <auction-card-mini
                 v-for="li in auctions.list"
@@ -25,11 +26,14 @@
 <script>
 import AuctionCardMini from "@/components/AuctionCards/AuctionCardMini";
 import Pagination from "@/components/Pagination";
+import { bus } from "../../main";
+import { Spinner1 } from "@/components/Spinners";
 export default {
     name: "Purchased",
     components: {
         AuctionCardMini,
-        Pagination
+        Pagination,
+        Spinner1
     },
     data () {
         return {
@@ -47,6 +51,7 @@ export default {
     },
     methods: {
         async getAllPurchases () {
+            this.auctions.spinner = true;
             try {
                 const response = await this.$http.get(`/api/user/purchased?limit=5&page=${this.auctions.currentPage}`);
                 this.auctions.list = response.data.auctions.items;
@@ -54,7 +59,8 @@ export default {
                 this.auctions.prevPage = response.data.auctions.prev;
                 this.auctions.spinner = false;
             } catch (error) {
-                console.log(error.respnse);
+                this.auctions.spinner = false;
+                bus.$emit("changeMessage", "failed to load purchases", "error");
             }
         }
     },

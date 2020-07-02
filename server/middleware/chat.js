@@ -5,20 +5,25 @@ const chatMiddleware = {};
 
 chatMiddleware.checkIfChatRoomExists = async function (req, res, next) {
     const { foundUser } = req;
-    console.log(`user: ${req.user.username} => ${foundUser.username}`);
     try {
         const foundChatRoom = await Chat.findOne({
-            participants: {
-                $elemMatch: {
-                    "user.username": req.user.username
+            $and: [
+                {
+                    participants: {
+                        $elemMatch: {
+                            "user.username": req.user.username
+                        }
+                    }
+                },
+                // eslint-disable-next-line no-dupe-keys
+                {
+                    participants: {
+                        $elemMatch: {
+                            "user.username": foundUser.username
+                        }
+                    }
                 }
-            },
-            // eslint-disable-next-line no-dupe-keys
-            participants: {
-                $elemMatch: {
-                    "user.username": foundUser.username
-                }
-            }
+            ]
         });
         if (foundChatRoom !== null) {
             return res.status(200).json({
