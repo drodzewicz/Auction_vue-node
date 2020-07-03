@@ -16,7 +16,7 @@ const passportSocketIo = require("passport.socketio");
 const cookieParser = require("cookie-parser");
 const mongoose = require("./configs/mongoose");
 
-const PORT = process.env.SERVER_PORT || 3000;
+const PORT = process.env.PORT || 3000;
 const SECRET = process.env.SECRET || "$uP3Rr $3cret C0de 4 flN@l Pr0j3<T";
 const ENVIROMENT = process.env.NODE_ENV || "development";
 const SESSION_KEY = process.env.SESSION_KEY || "express.sid";
