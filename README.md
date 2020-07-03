@@ -1,15 +1,16 @@
 # Bidit - Auction service
 
-**BidIt** is a web application built using Express and MongoDB on Backend, and Vue.js on Fronend. 
+**BidIt** is a web application built using Express and MongoDB on Backend, and Vue.js on Frotnend. 
 <br> Final project for *Web Technologies* course.
 <br> This application can be operated using frontend app created in Vue ( uses passport-local strategy for authentication in clinet ) or any other client like Postman using seperate external API (external API uses passport-JWT strategy fro authentication).
+<br>**demo version: https://auction-bidit.herokuapp.com**
 ### Application fetures:
 * Creating an auction ``two types: time limited or buy now``
-* Full CRUD on auctions ``editing and deleting and auction can only be done before start of auction or if it's of type buy now before someone buys it ``
+* Full CRUD on auctions ``editing and deleting an auction can only be done before auction starts or if it's of type buy now before someone buys it ``
 * Backend and frontend pagination
-* Chat using socket.io ``application has a chat tab where you can search a user by username and message them``
-* Chat notification ``if you are not foused on the chat, you will get a notification that you got a new message``
-* Live bidding ``when auction starts, logged in users have acces to bidding on an item. Bids are displayed live (using socket.io) to each logged in user that takes part in bidding``
+* Chat using socket.io ``application has a chat tab where you can search a user by username and message them directly``
+* Notification ``if you are not focused on the chat, you will get a notification that you got a new message or if you have been outbiddet by someone on an auction you also get a notification that you can click and get redirected to show page of that auction``
+* Live bidding ``when auction starts, logged in users have access to bidding on an item. Bids are displayed live (using socket.io) to each logged in user``
 
 ### Install dependencies
 
