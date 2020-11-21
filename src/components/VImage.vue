@@ -11,11 +11,15 @@ export default {
         },
         classes: {
             type: String
+        },
+        defaultImage: {
+            type: String,
+            default: "/image_not_loaded.svg"
         }
     },
     methods: {
         imageLoadError (e) {
-            e.target.src = "/image_not_loaded.svg";
+            e.target.src = this.defaultImage;
         }
     }
 };

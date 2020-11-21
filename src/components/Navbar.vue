@@ -1,60 +1,35 @@
 <template>
-    <nav id="main-nav">
-        <div class="nav-container">
-            <router-link id="app-logo" to="/">
-                <img src="../assets/logo.svg" alt />
-            </router-link>
-            <router-link
-                v-if="getUser !== null"
-                class="nav-item"
-                to="/profile/my-auctions"
-            ><i class="fas fa-user"></i>{{getUser}}</router-link>
-            <div class="full-view">
-                <router-link v-if="getUser !== null" class="nav-item" to="/chat">
-                <i class="fas fa-comment-alt"></i>
-                Chat
-                </router-link>
-                <router-link v-if="getUser == null" class="nav-item" to="/login">Login</router-link>
-                <router-link v-if="getUser == null" class="nav-item" to="/register">Register</router-link>
-                <a v-if="getUser !== null" class="nav-item" @click="logOutUser">
-                  <i class="fas fa-sign-out-alt"></i>
-                  Logout
-                  </a>
-            </div>
-            <div @click="toggleColapsedMenu" id="nav-hamburger"><i class="fas fa-bars"></i></div>
-        </div>
-        <div v-if="this.colapsed" class="colapsed-items">
-            <router-link v-if="getUser !== null" class="nav-item" to="/chat">
-              <i class="fas fa-comment-alt"></i>
-              Chat
-            </router-link>
-            <router-link v-if="getUser == null" class="nav-item" to="/login">Login</router-link>
-            <router-link v-if="getUser == null" class="nav-item" to="/register">Register</router-link>
-            <a v-if="getUser !== null" class="nav-item" @click="logOutUser">
-              <i class="fas fa-sign-out-alt"></i>
-              Logout
-            </a>
-        </div>
-    </nav>
+  <nav id="main-nav">
+    <router-link id="app-logo" to="/">
+    <img src="../assets/logo.svg" />
+    </router-link>
+    <div v-if="getUser==null" class="authenticated-false nav-menu">
+    <router-link class="nav-item" to="/login">Login</router-link>
+    </div>
+    <div v-else class="authenticated-true nav-menu">
+        <router-link class="nav-item chat-button" :class="{notification: true}" to="/chat">
+                <img src="../assets/message-icon.svg" />
+        </router-link>
+        <profile-dropdown>
+            <button slot="profile-btn" class="nav-item profile-btn">
+                <VImage imageUrl="" defaultImage="/default_avatar_image.svg"  />
+                <span class="username">{{getUser}}</span>
+            </button>
+        </profile-dropdown>
+    </div>
+  </nav>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import VImage from "@/components/VImage";
+import ProfileDropdown from "@/components/ProfileDropdown";
 
 export default {
     name: "Navbar",
-    data () {
-        return {
-            colapsed: false
-        };
-    },
-    methods: {
-        toggleColapsedMenu () {
-            this.colapsed = !this.colapsed;
-        },
-        logOutUser () {
-            this.$store.dispatch("LOGOUT");
-        }
+    components: {
+        VImage,
+        ProfileDropdown
     },
     computed: mapGetters(["getUser"])
 };
@@ -62,101 +37,84 @@ export default {
 
 <style lang="scss" >
 #main-nav {
-    box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.3);
-    background: $main-dark-blue;
+  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.3);
+  background: $main-dark-blue;
+  color: white;
+  width: 100%;
+  height: 4rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0.1rem 1rem;
+
+  #app-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0;
+    margin-right: auto;
     color: white;
-    transition: all 0.3s ease-in-out;
-    width: 100%;
+    img {
+      height: 3rem;
+      width: 3rem;
+    }
+  }
 
-    #app-logo {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-left: 0;
-        margin-right: auto;
+.nav-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+     & > * {
+         margin: 0 0.3rem;
+     }
+     .chat-button {
+         &.notification {
+             &::after {
+                 content: "";
+                 position: absolute;
+                 $dot-size: 0.7rem;
+                 width: $dot-size;
+                 height: $dot-size;
+                 background:#E82F2F;
+                 border-radius: 5rem;
+                 transform: translate(110%, -80%);
+             }
+         }
+     }
+}
+
+.nav-item {
+    text-decoration: none;
+    color: $main-dark-blue;
+    background: #192771;
+    color: white;
+    border-radius: 5px;
+    padding: 0rem 0.6rem;
+    border: none;
+    display: flex;
+    place-items: center;
+    font-size: 1rem;
+    cursor: pointer;
+    height: 2.2rem;
+    outline: none;
+
+    span {
         color: white;
+        font-family: 'Secular One', sans-serif;
+        margin-left: 0.3rem;
+    }
+
+    &.profile-btn {
         img {
-            height: 3rem;
-            width: 3rem;
+            $avatar-size: 1.4rem;
+            height: $avatar-size;
+            width: $avatar-size;
+            border-radius: 5rem;
         }
     }
-
-    .nav-container {
-        padding: 0.5rem 2rem;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        align-items: center;
-
-        #nav-hamburger {
-            cursor: pointer;
-            display: none;
-            font-size: 1.4rem;
-            @include mobile {
-                display: block;
-            }
-        }
-        .full-view {
-            display: flex;
-            flex-direction: row;
-            @include mobile {
-                display: none;
-            }
-        }
-    }
-    @keyframes nav-items-apear {
-        0% {
-            height: 0rem;
-            color: transparent;
-            background: transparent;
-        }
-        50% {
-            color: white;
-            background: auto;
-        }
-        100% {
-            height: 1.5rem;
-        }
-    }
-
-    .colapsed-items {
-        display: none;
-        padding: 1rem 0;
-        flex-direction: column;
-        align-items: center;
-        background: rgba(0, 0, 0, 0.245);
-
-        @include mobile {
-            display: flex;
-        }
-        .nav-item {
-            border: none;
-            margin: 0.4rem 0;
-            animation: nav-items-apear 0.4s ease-out forwards;
-            .fas {
-              margin-right: 0.3rem;
-            }
-        }
-    }
-    .nav-item {
-        margin: 0 0.5rem;
-        text-decoration: none;
-        color: white;
-        transition: all 0.15s ease-in-out;
-        border: 1.2px solid white;
-        padding: 0.2rem 0.8rem;
-        border-radius: 5px;
-        cursor: pointer;
-        &:hover {
-            background: rgba(255, 255, 255, 0.177);
-        }
-        &.router-link-exact-active {
-            background: white;
-            color: $main-dark-blue;
-        }
-        .fas {
-            margin-right: 0.3rem;
-          }
-    }
+}
 }
 </style>
