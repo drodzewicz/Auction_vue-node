@@ -7,7 +7,8 @@ import store from "./store";
 
 Vue.config.productionTip = false;
 
-const API_URL = process.env.NODE_ENV === "production" ? "/" : "http://localhost:3000/";
+const SERVER_PORT = process.env.VUE_APP_API_URL || 8080;
+const API_URL = process.env.NODE_ENV === "production" ? "/" : `http://localhost:${SERVER_PORT}/`;
 
 const base = axios.create({
     baseURL: API_URL,

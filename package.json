@@ -7,11 +7,12 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --port 3000",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "dev": "nodemon server/app.js",
-    "start": "node server/app.js"
+    "dev": "SET NODE_ENV=development && nodemon server/app.js",
+    "start": "SET NODE_ENV=production && node server/app.js",
+    "server-install": "npm install --prefix server"
   },
   "dependencies": {
     "axios": "^0.19.2",
