@@ -1,6 +1,5 @@
 <template>
     <div id="app">
-        <pop-down />
         <navbar />
         <div class="content-container">
             <router-view />
@@ -10,14 +9,12 @@
 
 <script>
 import Navbar from "./components/Navbar.vue";
-import PopDown from "./components/PopDown.vue";
 import { bus } from "./main";
 import { mapGetters } from "vuex";
 export default {
     name: "App",
     components: {
-        Navbar,
-        PopDown
+        Navbar
     },
     created () {
         this.authenticateUser();

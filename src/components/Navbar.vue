@@ -1,4 +1,5 @@
 <template>
+<div class="nav-wrapper">
   <nav id="main-nav">
     <router-link id="app-logo" to="/">
     <img src="../assets/logo.svg" />
@@ -18,24 +19,32 @@
         </profile-dropdown>
     </div>
   </nav>
+  <pop-down />
+</div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import VImage from "@/components/VImage";
 import ProfileDropdown from "@/components/ProfileDropdown";
+import PopDown from "@/components/PopDown.vue";
 
 export default {
     name: "Navbar",
     components: {
         VImage,
-        ProfileDropdown
+        ProfileDropdown,
+        PopDown
     },
     computed: mapGetters(["getUser"])
 };
 </script>
 
 <style lang="scss" >
+.nav-wrapper {
+    display: block;
+    position: relative;
+}
 #main-nav {
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.3);
   background: $main-dark-blue;
@@ -48,6 +57,8 @@ export default {
   align-items: center;
   box-sizing: border-box;
   padding: 0.1rem 1rem;
+  position: relative;
+  z-index: 50;
 
   #app-logo {
     display: flex;
@@ -109,7 +120,8 @@ export default {
 
     &.profile-btn {
         img {
-            $avatar-size: 1.4rem;
+            object-fit: cover;
+            $avatar-size: 1.1rem;
             height: $avatar-size;
             width: $avatar-size;
             border-radius: 5rem;
