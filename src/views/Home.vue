@@ -110,8 +110,6 @@ export default {
         flex-direction: row;
         flex-wrap: wrap;
         margin: 0 5%;
-        min-height: 40rem;
-        max-width: 90rem;
         justify-content: center;
         & > * {
             margin: 0 1rem;

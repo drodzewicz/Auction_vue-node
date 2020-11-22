@@ -4,17 +4,20 @@
         <div class="content-container">
             <router-view />
         </div>
+        <Footer />
     </div>
 </template>
 
 <script>
-import Navbar from "./components/Navbar.vue";
+import Navbar from "@/components/Navbar.vue";
+import Footer from "@/components/Footer.vue";
 import { bus } from "./main";
 import { mapGetters } from "vuex";
 export default {
     name: "App",
     components: {
-        Navbar
+        Navbar,
+        Footer
     },
     created () {
         this.authenticateUser();
@@ -66,10 +69,10 @@ body {
     overflow-x: hidden;
 }
 .content-container {
-    margin: 0.4rem 2rem;
-    transition: all 0.3s ease-in-out;
+    margin: 0 2rem;
+    min-height: calc(100vh - 8rem);
     @include mobile {
-        margin: 0.4rem 0.8rem;
+        margin: 0 0.8rem;
     }
 }
 </style>
