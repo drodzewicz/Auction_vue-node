@@ -1,25 +1,27 @@
 <template>
-    <div class="box">
-        <div class="register-container">
-            <h2>Register</h2>
-
-            <text-input
-                v-for="field in loginFields"
-                v-model="field.value"
-                :key="field.name"
-                :value="field.value"
-                :name="field.name"
-                :type="field.type"
-                :validation="field.validation"
-                :error="field.error"
-                :required="field.validation.required"
-                v-on:validateField="validateFieldLogin"
-            />
-            <button class="primary-btn" :disabled="!isReadyToSent || spinner" @click="registerUser">
-              Register
-              <spinner-2 v-if="spinner" />
-            </button>
-        </div>
+    <div class="register-container">
+            <h2 class="form-title">
+                 <img src="@/assets/user-icon-2.svg" alt="user" >
+                <span>Register</span>
+            </h2>
+            <form class="register-form">
+                <text-input
+                    v-for="field in loginFields"
+                    v-model="field.value"
+                    :key="field.name"
+                    :value="field.value"
+                    :name="field.name"
+                    :type="field.type"
+                    :validation="field.validation"
+                    :error="field.error"
+                    :required="field.validation.required"
+                    v-on:validateField="validateFieldLogin"
+                />
+                <button class="primary-btn" type="submit" :disabled="!isReadyToSent || spinner" @click="registerUser">
+                    Register
+                    <spinner-2 v-if="spinner" />
+                </button>
+            </form>
     </div>
 </template>
 
@@ -39,7 +41,7 @@ export default {
             loginFields: [
                 {
                     isValid: false,
-                    name: "username",
+                    name: "Username",
                     value: "",
                     error: "",
                     validation: {
@@ -51,7 +53,7 @@ export default {
                 },
                 {
                     isValid: false,
-                    name: "password",
+                    name: "Password",
                     value: "",
                     error: "",
                     type: "password",
@@ -63,7 +65,7 @@ export default {
                 },
                 {
                     isValid: false,
-                    name: "repeat password",
+                    name: "Repeat password",
                     value: "",
                     error: "",
                     type: "password",
@@ -78,7 +80,8 @@ export default {
         };
     },
     methods: {
-        async registerUser () {
+        async registerUser (event) {
+            event.preventDefault();
             this.spinner = true;
             try {
                 await this.$http.post("/api/auth/register", {
@@ -130,28 +133,48 @@ export default {
 </script>
 
 <style lang="scss">
-.register-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 25rem;
+    .register-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 3rem;
 
-    .text-input {
-        width: 20rem;
-
-        @include mobile {
-            width: 100%;
+        .form-title {
+            $font-size: 1.3rem;
+             background: #ECEBF1;
+             color: $main-dark-blue;
+             padding: 0.2rem 1rem;
+             border-radius: 5px;
+             display: flex;
+             flex-direction: row;
+             place-items: center;
+             margin-bottom: 2rem;
+             img {
+                 height: $font-size;
+                 width: $font-size;
+                 margin-right: 0.4rem;
+             }
+             span {
+                 font-size: $font-size;
+             }
+        }
+        .register-form {
+            min-width: 15rem;
+            max-width: 50rem;
+            display: flex;
+            flex-direction: column;
+            .primary-btn {
+                align-self: center;
+                .spinner-2 {
+                    position: absolute;
+                }
+            }
+        }
+        #registration-link {
+            color: $main-dark-blue;
+            align-self: center;
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
         }
     }
-
-    .primary-btn {
-        margin-top: 1rem;
-        font-size: 1.5rem;
-        position: relative;
-        .spinner-2 {
-          position: absolute;
-        }
-    }
-}
 </style>

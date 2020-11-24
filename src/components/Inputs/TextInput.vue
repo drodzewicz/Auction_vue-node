@@ -1,6 +1,6 @@
 <template>
     <div class="text-input">
-        <label v-if="displayLabel" for="username">{{`${required ? "* " : ""}${name}:`}}</label>
+        <label v-if="displayLabel" >{{`${required ? "* " : ""}${name}:`}}</label>
         <input
             :min="min"
             :type="type"
