@@ -26,6 +26,7 @@ export default {
         justify-content: center;
         align-items: center;
         height: $footer-height;
+        z-index: 10;
 
         .footer-item {
             display: flex;

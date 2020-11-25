@@ -4,7 +4,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { bus } from "../main";
+import { bus } from "@/main";
 import AuctionEditor from "./AuctionEditor";
 
 export default {

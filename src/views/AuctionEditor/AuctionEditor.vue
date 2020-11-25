@@ -68,7 +68,7 @@ import { TextInput, AreaText, SwitchButton } from "@/components/Inputs";
 import { mapGetters } from "vuex";
 import { Spinner2 } from "@/components/Spinners";
 import VImage from "@/components/VImage";
-import { bus } from "../main";
+import { bus } from "@/main";
 
 export default {
     name: "AuctionEditor",

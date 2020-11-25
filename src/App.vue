@@ -69,10 +69,6 @@ body {
     overflow-x: hidden;
 }
 .content-container {
-    margin: 0 2rem;
     min-height: calc(100vh - 8rem);
-    @include mobile {
-        margin: 0 0.8rem;
-    }
 }
 </style>
