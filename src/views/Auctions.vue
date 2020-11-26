@@ -1,24 +1,19 @@
 <template>
-    <div class="home-container">
-        <div class="landing-page-cover">
-            <div class="welcome-container">
-                <h1 class="welcome">Welcome to Bidder!</h1>
-                <h3 class="welcome-text">Here you will find what you are looking for.</h3>
-                <h3 class="welcome-text">Auction, buy and win !</h3>
-            </div>
-            <img id="love-icon" src="@/assets/love.svg" alt="love">
-            <img id="bags" src="@/assets/bags.svg" alt="bags">
+    <div class="auctions-container">
+        <div class="search-filter-container">
         </div>
-        <section class="offers">
+        <section class="all-offers">
             <img class="wave-bg" src="@/assets/wave_bg.svg" alt="wave">
             <div class="offer-wrapper">
                 <search-bar v-model="searchQuery" @search="execSearch" />
                 <spinner-1 v-if="spinner" />
                 <product-container v-if="!spinner" :auctions=auctions />
-                <router-link v-if="!spinner" to="/auction" class="more">
-                    <span>More</span>
-                    <img src="@/assets/more.svg" alt="more">
-                </router-link>
+                 <pagination
+                    :currentPage="page.current"
+                    :prev="page.prev"
+                    :next="page.next"
+                    v-model="page.current"
+                />
             </div>
         </section>
     </div>
@@ -29,17 +24,24 @@ import { Spinner1 } from "@/components/Spinners";
 import { mapGetters } from "vuex";
 import ProductContainer from "@/components/ProductContainer";
 import SearchBar from "@/components/Inputs/SearchBar";
+import Pagination from "@/components/Pagination";
 
 export default {
-    name: "Home",
+    name: "Auctions",
     components: {
         ProductContainer,
         Spinner1,
-        SearchBar
+        SearchBar,
+        Pagination
     },
     data () {
         return {
             auctions: [],
+            page: {
+                current: 1,
+                prev: null,
+                next: null
+            },
             spinner: true,
             searchQuery: ""
         };
@@ -56,9 +58,11 @@ export default {
             this.spinner = true;
             try {
                 const reposne = await this.$http.get("/api/auction?page=1&limit=8&finished=false");
-                const { items } = reposne.data.auctions;
+                const { items, next, prev } = reposne.data.auctions;
                 this.auctions = items;
                 this.spinner = false;
+                this.page.next = next;
+                this.page.prev = prev;
             } catch (error) {
                 this.spinner = false;
             }
@@ -68,68 +72,14 @@ export default {
 </script>
 
 <style lang="scss">
-.home-container {
+.auctions-container {
     margin-top: 3%;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
 
-    .landing-page-cover {
-        height: 90vh;
-        max-width: 50rem;
-        min-height: 38rem;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        flex-wrap: wrap;
-        #love-icon {
-            height: 5rem;
-            margin-top: 1rem;
-            @include mobile {
-                 display: none;
-            }
-        }
-        #bags {
-            height: 25rem;
-            width: 100%;
-            @include breaking-point-sm {
-                height: 20rem;
-            }
-            @include mobile {
-                height: 10rem;
-            }
-        }
-        .welcome-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            flex-grow: 1;
-            margin-bottom: 4rem;
-            @include mobile {
-                margin: 0 0.5rem;
-                align-items: center;
-                margin-top: 4rem;
-            }
-            .welcome {
-                margin: 0;
-                font-size: 3rem;
-                @include breaking-point-sm {
-                 font-size: 2.5rem;
-                }
-            }
-            .welcome-text {
-                margin: 0;
-                font-size: 1.5rem;
-                color: rgb(86, 86, 100);
-                @include breaking-point-sm {
-                 font-size: 1rem;
-                }
-            }
-        }
-    }
-
-    .offers {
+    .all-offers {
         width: 100%;
         overflow-y: hidden;
         .wave-bg {

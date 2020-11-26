@@ -1,9 +1,9 @@
 <template>
-    <div class="place-bid-input">
-        <button class="primary-btn" @click="placeBid">bid</button>
-        <input min="0" type="Number" v-model="price" />
+    <form class="place-bid-input">
+        <button class="primary-btn" type="submit" @click="placeBid">bid</button>
         <span class="currency">{{this.GET_CURRENCY()}}</span>
-    </div>
+        <input min="0" type="Number" v-model="price" />
+    </form>
 </template>
 
 <script>
@@ -23,7 +23,8 @@ export default {
     },
     methods: {
         ...mapGetters(["GET_CURRENCY"]),
-        placeBid () {
+        placeBid (event) {
+            event.preventDefault();
             this.$sock.emit("liveBid", {
                 roomId: this.auctionId,
                 bid: this.price
@@ -39,9 +40,9 @@ export default {
 
 <style lang="scss" >
 .place-bid-input {
-    background: rgb(177, 177, 177);
+    background: rgb(211, 206, 228);
     margin: 1rem 0;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow: hidden;
     display: flex;
     flex-direction: row;
@@ -51,18 +52,23 @@ export default {
         border-radius: 0;
         font-size: 1.1rem;
         outline: none;
+        widows: 2rem;
     }
     input {
         font-family: "Secular One", sans-serif;
         border: none;
         background: transparent;
-        font-size: 1.2rem;
+        font-size: 1rem;
         width: 7rem;
         padding: 0 0.3rem;
         outline: none;
+        border-left: solid 1px rgb(155, 155, 155);
+        margin: 0.2rem 0;
+
     }
     .currency {
-        margin-right: 0.5rem;
+        margin: 0 0.5rem;
+        color: rgb(72, 67, 82);
     }
 }
 </style>

@@ -1,5 +1,5 @@
 const state = {
-    currency: "$"
+    currency: "USD"
 };
 
 const getters = {

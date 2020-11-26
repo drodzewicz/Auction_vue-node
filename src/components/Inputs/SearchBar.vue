@@ -22,18 +22,17 @@ export default {
 <style lang="scss" >
 .search-bar {
     display: flex;
-    justify-content: center;
-    align-items: center;
     background: rgb(187, 187, 187);
-    margin: 0.5rem 1rem;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow: hidden;
     box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.319);
     transition: all 0.3s ease-in-out;
+    align-items: stretch;
+    width: 100%;
     input {
         font-family: "Roboto", sans-serif;
-        margin: 0;
-        font-size: 1.1rem;
+        margin: 0.5rem 0.6rem;
+        font-size: 1.3rem;
         background: transparent;
         border: none;
         padding-left: 0.5rem;
@@ -42,17 +41,17 @@ export default {
     }
     button {
         margin: 0;
-        background: $main-dark-blue;
-        color: white;
+        background: $main-yellow;
+        color: $main-dark-blue;
         font-family: "Secular One", sans-serif;
-        font-size: 1rem;
+        font-size: 1.5rem;
         border: none;
-        padding: 0.2rem 0.4rem;
-        height: 100%;
+        padding: 0.2rem 0.8rem;
         cursor: pointer;
         transition: all 0.3s ease-in-out;
+        outline: none;
         &:hover {
-            background: rgb(71, 66, 206);
+             background: lighten($main-yellow, 10%)
         }
     }
 }

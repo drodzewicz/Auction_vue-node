@@ -4,7 +4,7 @@ import Home from "@/views/Home.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import NewAuction from "@/views/AuctionEditor/NewAuction.vue";
-import AuctionShow from "@/views/AuctionShow.vue";
+import AuctionShow from "@/views/AuctionShow/AuctionShow.vue";
 import EditAuction from "@/views/AuctionEditor/EditAuction.vue";
 import Profile from "@/views/Profile.vue";
 import MyLiveAuctions from "@/views/ProfileViews/MyLiveAuctions.vue";
@@ -14,6 +14,7 @@ import Purchased from "@/views/ProfileViews/Purchased.vue";
 import Chat from "@/views/Chat.vue";
 import ErrorPage from "@/views/ErrorPage.vue";
 import ChatBox from "@/views/ChatBox.vue";
+import Auctions from "@/views/Auctions.vue";
 
 import store from "../store";
 
@@ -63,6 +64,12 @@ const routes = [
         component: NewAuction,
         meta: { title: "bidit | Create New Auction" },
         beforeEnter: notAuthenticatedUserHandler
+    },
+    {
+        path: "/auction",
+        name: "Auctions",
+        component: Auctions,
+        meta: { title: "bidit | auctions" }
     },
     {
         path: "/auction/:id",

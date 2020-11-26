@@ -162,8 +162,8 @@ $card-width: 20rem;
         transition: all 0.3s ease-in-out;
 
         .price {
-            background: $main-dark-blue;
-            color: white;
+            background: $main-yellow;
+            color: $main-dark-blue;
             height: 100%;
             display: flex;
             align-items: center;
