@@ -134,12 +134,15 @@ export default {
 .chat-box-container{
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
+    flex-grow: 1;
 }
 .chat-box {
     width: 100%;
     max-width: 150rem;
-
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     .chat-room-title {
         color: $main-dark-blue;
         display: flex;
@@ -160,10 +163,14 @@ export default {
     }
     .conversation-box {
         background: white;
-        box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.381);
-        border-radius: 10px;
-        height: 60vh;
+        box-shadow: 0 1px 1px 1px rgba(32, 20, 20, 0.381);
+        border-radius: 5px;
+        overflow: auto;
+        min-height: 0;
+        flex-grow: 1;
         width: 100%;
+        padding: 0.2rem 0.7rem;
+        box-sizing: border-box;
         .conversation-section {
             width: calc(100% - 0.5rem);
             padding: 0 0.5rem;
@@ -173,6 +180,18 @@ export default {
             overflow-y: scroll;
 
             align-items: flex-start;
+            &::-webkit-scrollbar {
+                height: 0.5em;
+                width: 12px;
+                }
+            &::-webkit-scrollbar-track {
+                background: rgb(216, 217, 241);
+                border-radius: 5px;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: rgb(166, 167, 185);
+                border-radius: 5px;
+            }
         }
     }
     .post-input {

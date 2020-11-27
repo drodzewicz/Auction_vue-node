@@ -1,18 +1,24 @@
 <template>
-    <div class="search-bar">
-        <input placeholder="Search" type="text" @input="updateValue($event.target.value)" />
-        <button @click="execSearch"><i class="fas fa-search"></i></button>
-    </div>
+    <form class="search-bar">
+        <input :value="input" placeholder="Search" type="text" @input="updateValue($event.target.value)" />
+        <button type="submit" @click="execSearch"><i class="fas fa-search"></i></button>
+    </form>
 </template>
 
 <script>
 export default {
     name: "SearchBard",
+    props: {
+        input: {
+            type: String
+        }
+    },
     methods: {
         updateValue (value) {
             this.$emit("input", value);
         },
-        execSearch () {
+        execSearch (event) {
+            event.preventDefault();
             this.$emit("search");
         }
     }

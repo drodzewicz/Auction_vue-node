@@ -69,6 +69,7 @@ body {
     overflow-x: hidden;
 }
 .content-container {
+    position: relative;
     min-height: calc(100vh - 8rem);
 }
 </style>
