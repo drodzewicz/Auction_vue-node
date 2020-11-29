@@ -158,6 +158,8 @@ export default {
          margin: 1rem;
          display: flex;
          justify-content: center;
+         align-items: center;
+         position: relative;
     }
     .chat-rooms {
         width: 15rem;
@@ -165,8 +167,18 @@ export default {
         transition: all 0.3s ease-in-out;
         display: flex;
         flex-direction: column;
+        @include mobile {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            right: 0;
+        }
         &.hide {
-            transform: translateX(100%);
+            margin-right: -15rem;
+            @include mobile {
+                margin-right: 0;
+                transform: translateX(100%);
+            }
             .arrows img {
                 transform: rotate(180deg)
             }

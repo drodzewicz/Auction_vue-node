@@ -13,7 +13,7 @@ import ParticipatedAuctions from "@/views/ProfileViews/ParticipatedAuctions.vue"
 import Purchased from "@/views/ProfileViews/Purchased.vue";
 import Chat from "@/views/Chat.vue";
 import ErrorPage from "@/views/ErrorPage.vue";
-import ChatBox from "@/views/ChatBox.vue";
+import ChatBox from "@/views/ChatBox/ChatBox.vue";
 import Auctions from "@/views/Auctions.vue";
 
 import store from "../store";

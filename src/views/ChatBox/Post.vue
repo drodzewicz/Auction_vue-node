@@ -1,6 +1,5 @@
 <template>
-    <div class="post-container" :class="{author: this.isAuthor, newMsg: !this.recieved && !this.isAuthor}">
-        <strong class="username">{{this.username}}</strong>
+    <div class="post-container" :class="{author: this.isAuthor, animate}">
         <p class="message">{{this.message}}</p>
         <span class="time-stamp">{{momentTime}}</span>
     </div>
@@ -14,14 +13,12 @@ export default {
         message: {
             type: String
         },
-        recieved: {
-            type: Boolean
+        animate: {
+            type: Boolean,
+            default: false
         },
         timeStamp: {
             type: Date
-        },
-        username: {
-            type: String
         },
         isAuthor: {
             type: Boolean,
@@ -43,16 +40,25 @@ export default {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 0.2rem 0.4rem;
+    padding: 0.4rem 0.6rem;
     margin: 0.3rem 0.4rem;
-    border-radius: 10px;
+    border-radius: 12px;
+    border-bottom-left-radius: 2px;
     align-self: flex-start;
     font-family: "Roboto", sans-serif;
-    .username {
-        font-size: 0.7rem;
+    max-width: 40rem;
 
-        &::after {
-            content: ":";
+    &.animate {
+        animation: message-pop 0.5s forwards 0.2s;
+        transform: scale(0);
+
+        @keyframes message-pop {
+            from {
+                transform: scale(0.2);
+            }
+            to {
+                transform: scale(1.1);
+            }
         }
     }
     .message {
@@ -67,16 +73,14 @@ export default {
     &.author {
         align-self: flex-end;
         background: $main-dark-blue;
-        .username,
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 2px;
         .message {
             color: white;
         }
         .time-stamp {
             color: rgb(112, 116, 125);
         }
-    }
-    &.newMsg {
-        box-shadow: 0 0 3px 2px rgba(0, 128, 0, 0.653);
     }
 }
 </style>
