@@ -24,7 +24,7 @@ chatService.createARoom = async function (req, res) {
     try {
         const savedChatRoom = await newChatRoom.save();
         return res.status(200).json({
-            chatRoom: savedChatRoom
+            savedChatRoom
         });
     } catch (error) {
         return res.status(400).json({

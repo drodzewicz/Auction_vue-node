@@ -6,7 +6,7 @@ import Register from "@/views/Register.vue";
 import NewAuction from "@/views/AuctionEditor/NewAuction.vue";
 import AuctionShow from "@/views/AuctionShow/AuctionShow.vue";
 import EditAuction from "@/views/AuctionEditor/EditAuction.vue";
-import Profile from "@/views/Profile.vue";
+import Profile from "@/views/ProfileViews/Profile.vue";
 import MyLiveAuctions from "@/views/ProfileViews/MyLiveAuctions.vue";
 import MyAuctions from "@/views/ProfileViews/MyAuctions.vue";
 import ParticipatedAuctions from "@/views/ProfileViews/ParticipatedAuctions.vue";

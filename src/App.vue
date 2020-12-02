@@ -66,7 +66,6 @@ body {
 #app {
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
 }
 .content-container {
     position: relative;

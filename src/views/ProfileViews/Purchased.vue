@@ -1,6 +1,6 @@
 <template>
     <div class="purhased-auction-container">
-        <h2>Purchased auctions</h2>
+        <h2  class="section-title">Purchased auctions</h2>
         <spinner-1 v-if="auctions.spinner"/>
         <div v-if="!auctions.spinner" class="aucion-box">
             <auction-card-mini

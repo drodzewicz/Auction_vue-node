@@ -1,13 +1,18 @@
 <template>
     <router-link class="auction-link-mini" :to="'/auction/' + this.id">
         <div class="auction-card-mini-container">
-            <v-image classes="auction-image" :imageUrl="image" />
+            <div class="image-wrapper">
+                <div class="tag-wrapper">
+                    <img v-if="isSold" class="sold-tag" src="@/assets/sold_image.png" alt="sold">
+                </div>
+                <v-image classes="auction-image" :imageUrl="image" />
+            </div>
             <div class="content-body">
                 <h2 class="auction-title">{{name}}</h2>
-                <div class="time-count-down-label">
-                    <span v-if="!isNaN(endDate)" class="time">Auction</span>
-                    <span v-if="isNaN(endDate)" class="time">Buy Now</span>
-                    <span class="price">{{formatPrice}}</span>
+                <div class="product-tags" :class="{auction: !endDate}">
+                    <span v-if="!!endDate" class="tag auction">Auction</span>
+                    <span v-if="!endDate" class="tag buy">Buy Now</span>
+                    <span class="price">{{formatPrice}}<span class="currency">{{this.GET_CURRENCY}}</span></span>
                 </div>
             </div>
         </div>
@@ -42,14 +47,27 @@ export default {
             type: Number
         },
         endDate: {
-            type: Date
+            type: String
+        },
+        buyer: {
+            type: Object
         }
     },
     computed: {
         ...mapGetters(["GET_CURRENCY"]),
         formatPrice () {
             const choosePrice = this.highestBidder ? this.highestBidder : this.price;
-            return `${Math.floor(choosePrice * 100) / 100} ${this.GET_CURRENCY}`;
+            return `${Math.floor(choosePrice * 100) / 100}`;
+        },
+        isEnded () {
+            const timeNow = new Date();
+            const endDateParsed = new Date(this.endDate);
+            return timeNow > endDateParsed;
+        },
+        isSold () {
+            const autionEnededAndBUyerIsNotNUll = this.isEnded && this.buyer !== undefined;
+            const buyNowBuyerNotnull = !this.endDate && this.buyer !== undefined;
+            return autionEnededAndBUyerIsNotNUll || buyNowBuyerNotnull;
         }
     }
 };
@@ -66,11 +84,11 @@ export default {
     box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.32);
     display: flex;
     flex-direction: row;
-    width: 25rem;
+    width: 20rem;
+    min-width: 20rem;
     height: 5rem;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow: hidden;
-    margin: 1rem 0;
     transition: all ease-in-out 0.3s;
     &:hover {
         box-shadow: 0 1px 3px 2px rgba(0, 0, 0, 0.5);
@@ -78,40 +96,70 @@ export default {
     @include mobile {
         width: 100%;
     }
-
-    .auction-image {
-        width: 5rem;
-        height: 5rem;
-        object-fit: cover;
+    .image-wrapper {
+        position: relative;
+        .tag-wrapper {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.445);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            place-items: center;
+            justify-content: center;
+            .sold-tag {
+                 height: 3.5rem;
+            }
+        }
+        .auction-image {
+            width: 5rem;
+            height: 5rem;
+            object-fit: cover;
+        }
     }
+
     .content-body {
         display: flex;
         flex-direction: column;
         width: 100%;
-        .time-count-down-label {
-            background: rgb(220, 220, 220);
+        .product-tags {
+             background: rgb(255, 221, 148);
             color: $main-dark-blue;
             width: 100%;
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-
-            .time {
-                margin-left: 1rem;
+            .tag  {
                 font-size: 0.8rem;
-                @include mobile {
-                    margin-left: 0.3rem;
-                }
+                padding: 0.1rem 0.4rem;
+                color: rgb(51, 51, 59);
             }
             .price {
                 padding: 0 0.5rem 0 0.4rem;
-                background: $main-dark-blue;
-                color: white;
-                font-size: 0.9rem;
+                background: $main-yellow;
+                color: $main-dark-blue;
+                font-size: 0.8rem;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 @include mobile {
                     padding-right: 0.3rem;
                 }
+                .currency {
+                    font-size: 0.6rem;
+                    margin-left: 3px;
+                }
+            }
+            &.auction {
+                background: rgb(163, 152, 255);
+                .tag  {
+                    color: rgb(39, 37, 53);
+                }
+                .price {
+                    color: white;
+                    background: $main-dark-blue;
+                 }
             }
         }
         .auction-title {

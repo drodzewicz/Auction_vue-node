@@ -121,10 +121,11 @@ export default {
         async createChatRoom (username, index) {
             try {
                 const response = await this.$http.post(`/api/chat/${username}`);
-                const room = response.data.chatRoom;
+                const room = response.data.savedChatRoom;
                 this.myChatRooms.rooms.push(room);
                 this.searchedUsers.users.splice(index, 1);
                 this.clearSearchResults();
+                this.gotToChat(room._id);
             } catch (error) {
                 bus.$emit("changeMessage", error.response.msg, "error");
             }
@@ -153,6 +154,8 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
+    overflow-x: hidden;
+
      .chat-wrap {
          flex-grow: 1;
          margin: 1rem;

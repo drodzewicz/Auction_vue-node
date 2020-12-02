@@ -1,26 +1,29 @@
 <template>
     <div class="my-auction-container">
-        <h2>My Auctions</h2>
-        <spinner-1 v-if="auctions.spinner"/>
-        <div v-if="!auctions.spinner" class="aucion-box">
+        <h2 class="section-title">My Auctions</h2>
+        <div v-if="spinner" class="spinner-wrapper">
+            <spinner-1 />
+        </div>
+        <div v-if="!spinner" class="aucion-box">
             <auction-card-mini
-                v-for="li in auctions.list"
-                :key="li._id"
-                :id="li._id"
-                :name="li.name"
-                :descriptions="li.description"
-                :image="li.image"
-                :price="li.price"
-                :highestBidder="li.bids.length > 0 ? li.bids[li.bids.length-1].price : null"
-                :endDate="new Date(li.endDate)"
-            />
-            <pagination
-                :currentPage="auctions.currentPage"
-                :prev="auctions.prevPage"
-                :next="auctions.nextPage"
-                v-model="auctions.currentPage"
+                v-for="auction in auctions"
+                :key="auction._id"
+                :id="auction._id"
+                :name="auction.name"
+                :descriptions="auction.description"
+                :image="auction.image"
+                :price="auction.price"
+                :highestBidder="auction.bids.length > 0 ? auction.bids[auction.bids.length-1].price : null"
+                :endDate="auction.endDate"
+                :buyer="auction.buyer"
             />
         </div>
+        <pagination
+                :currentPage="currentPage"
+                :prev="prevPage"
+                :next="nextPage"
+                v-model="currentPage"
+            />
     </div>
 </template>
 
@@ -37,13 +40,11 @@ export default {
     },
     data () {
         return {
-            auctions: {
-                nextPage: null,
-                prevPage: null,
-                currentPage: 1,
-                list: [],
-                spinner: true
-            }
+            nextPage: null,
+            prevPage: null,
+            currentPage: 1,
+            auctions: [],
+            spinner: true
         };
     },
     created () {
@@ -51,21 +52,21 @@ export default {
     },
     methods: {
         async getAllAuthorAuction () {
-            this.auctions.spinner = true;
+            this.spinner = true;
             try {
-                const resposne = await this.$http.get(`/api/user/my-auctions?limit=5&page=${this.auctions.currentPage}`);
-                this.auctions.list = resposne.data.auctions.items;
-                this.auctions.nextPage = resposne.data.auctions.next;
-                this.auctions.prevPage = resposne.data.auctions.prev;
-                this.auctions.spinner = false;
+                const resposne = await this.$http.get(`/api/user/my-auctions?limit=8&page=${this.currentPage}`);
+                this.auctions = resposne.data.auctions.items;
+                this.nextPage = resposne.data.auctions.next;
+                this.prevPage = resposne.data.auctions.prev;
+                this.spinner = false;
             } catch (error) {
-                this.auctions.spinner = false;
+                this.spinner = false;
             }
         }
     },
     computed: {
         getCurrentPage () {
-            return this.auctions.currentPage;
+            return this.currentPage;
         }
     },
     watch: {
@@ -81,28 +82,24 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    .spinner-wrapper {
+        display: flex;
+        place-items: center;
+        height: 24.4rem;
+    }
     .aucion-box{
-        width: 100%;
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        @include breaking-point-md {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(4, 5.5rem);
+        gap: 0.8rem;
+
+        @include mobile {
             grid-template-columns: 1fr;
         }
-        justify-content: center;
-        align-items: center;
-        max-width: 60rem;
         .auction-link-mini {
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
         .pagination-container {
-            grid-column: 1/3;
-            @include breaking-point-md {
-                grid-column: auto;
-            }
-        }
     }
+}
 }
 </style>

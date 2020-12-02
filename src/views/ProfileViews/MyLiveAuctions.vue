@@ -1,6 +1,6 @@
 <template>
     <div class="live-auctioncontainer">
-        <h2>Live auctions</h2>
+        <h2  class="section-title">Live auctions</h2>
         <spinner-1 v-if="myLiveAuctions.spinner"/>
         <div v-if="!myLiveAuctions.spinner">
             <auction-card-live
