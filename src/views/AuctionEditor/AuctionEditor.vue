@@ -296,7 +296,7 @@ export default {
              display: flex;
              justify-content: center;
              flex-direction: row;
-             @include breaking-point-sm {
+             @include mobile {
                  align-items: center;
                 flex-direction: column;
              }

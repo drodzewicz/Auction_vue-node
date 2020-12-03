@@ -1,10 +1,12 @@
 <template>
     <div class="live-auctioncontainer">
         <h2  class="section-title">Live auctions</h2>
-        <spinner-1 v-if="myLiveAuctions.spinner"/>
-        <div v-if="!myLiveAuctions.spinner">
+        <div v-if="spinner" class="spinner-wrapper">
+            <spinner-1 />
+        </div>
+        <div v-if="!spinner" class="live-auction-box">
             <auction-card-live
-                v-for="auction in myLiveAuctions.auctions"
+                v-for="auction in auctions"
                 :key="auction._id"
                 :id="auction._id"
                 :name="auction.name"
@@ -29,11 +31,8 @@ export default {
     },
     data () {
         return {
-            myAuctionPage: 1,
-            myLiveAuctions: {
-                auctions: [],
-                spinner: true
-            },
+            auctions: [],
+            spinner: true,
             searchQuery: ""
         };
     },
@@ -42,13 +41,13 @@ export default {
     },
     methods: {
         async getAllParticipatedInAuction () {
-            this.myLiveAuctions.spinner = true;
+            this.spinner = true;
             try {
                 const response = await this.$http.get("/api/user/live-auctions");
-                this.myLiveAuctions.auctions = response.data.auctions;
-                this.myLiveAuctions.spinner = false;
+                this.auctions = response.data.auctions;
+                this.spinner = false;
             } catch (error) {
-                this.myLiveAuctions.spinner = false;
+                this.spinner = false;
             }
         }
     }
@@ -60,5 +59,9 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    .live-auction-box {
+        margin-top: 2rem;
+    }
 }
 </style>

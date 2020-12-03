@@ -8,11 +8,12 @@
                 </span>
             </div>
             <ul class="profile-navigation-tab">
-                <router-link class="profile-nav-item" to="/profile/my-auctions">My Auctions</router-link>
+                <router-link class="profile-nav-item" to="/profile">Profile</router-link>
+                <router-link class="profile-nav-item" to="/profile/my-auctions">My Products</router-link>
                 <router-link class="profile-nav-item" to="/profile/live-auctions"
-                >Live Auction Pannel</router-link>
+                >Live Auctions</router-link>
                 <router-link class="profile-nav-item" to="/profile/participated">Participations</router-link>
-                <router-link class="profile-nav-item" to="/profile/purchased">Purchased</router-link>
+                <router-link class="profile-nav-item" to="/profile/purchased">Purchases</router-link>
             </ul>
         </nav>
         <div class="profile-content">
@@ -105,15 +106,15 @@ export default {
             margin: 0;
             padding: 0;
            .profile-nav-item{
-               text-decoration: none;
-               color: $main-dark-blue;
-               font-size: 1.2rem;
-               margin-bottom: 2rem;
-                padding: 0.6rem 1.1rem;
-                 border-radius: 10px;
-               &.router-link-active {
-                   background: $main-dark-blue;
-                   color: $main-yellow;
+                text-decoration: none;
+                color: #565b79;
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+                padding: 0.3rem 1.1rem;
+                border-radius: 10px;
+               &.router-link-exact-active {
+                   background: #A7AED1;
+                   color: #303552;
                }
            }
         }
@@ -132,6 +133,11 @@ export default {
                 padding: 0.4rem 1.2rem;
                 border-radius: 5px;
                 font-size: 1.2rem;
+            }
+            .spinner-wrapper {
+                display: flex;
+                place-items: center;
+                height: 24.4rem;
             }
         }
 

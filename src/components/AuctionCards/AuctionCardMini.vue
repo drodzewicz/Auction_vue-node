@@ -34,9 +34,6 @@ export default {
         name: {
             type: String
         },
-        descriptions: {
-            type: String
-        },
         image: {
             type: String
         },
@@ -47,7 +44,8 @@ export default {
             type: Number
         },
         endDate: {
-            type: String
+            type: String,
+            default: undefined
         },
         buyer: {
             type: Object
