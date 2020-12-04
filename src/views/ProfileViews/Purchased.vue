@@ -1,39 +1,39 @@
 <template>
-    <div class="purhased-auction-container">
-        <h2  class="section-title">Purchased auctions</h2>
-        <div v-if="spinner" class="spinner-wrapper">
-            <spinner-1 />
-        </div>
-        <div v-if="!spinner" class="aucion-box">
+    <profile-sub-page :isEmpty="products.length === 0" title="Purchases" :isLoaded="spinner">
+        <div class="aucion-box" slot="content">
             <auction-card-mini
-                v-for="li in products"
-                :key="li._id"
-                :id="li._id"
-                :name="li.name"
-                :image="li.image"
-                :price="li.price"
+                v-for="auction in products"
+                :key="auction._id"
+                :id="auction._id"
+                :name="auction.name"
+                :image="auction.image"
+                :price="auction.price"
+                :endDate="auction.endDate"
+                :buyer="auction.buyer"
             />
         </div>
-         <pagination
+            <pagination
+                slot="pagination"
                 :currentPage="currentPage"
                 :prev="prevPage"
                 :next="nextPage"
                 v-model="currentPage"
             />
-    </div>
+    </profile-sub-page>
 </template>
 
 <script>
 import AuctionCardMini from "@/components/AuctionCards/AuctionCardMini";
 import Pagination from "@/components/Pagination";
-import { bus } from "../../main";
-import { Spinner1 } from "@/components/Spinners";
+import ProfileSubPage from "./ProfileSubPage";
+import { bus } from "@/main";
+
 export default {
     name: "Purchased",
     components: {
         AuctionCardMini,
         Pagination,
-        Spinner1
+        ProfileSubPage
     },
     data () {
         return {
@@ -75,20 +75,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.purhased-auction-container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .aucion-box{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: repeat(4, 5.5rem);
-        gap: 0.8rem;
-
-        @include mobile {
-            grid-template-columns: 1fr;
-        }
-    }
-}
+<style>
 </style>

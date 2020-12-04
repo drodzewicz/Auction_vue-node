@@ -52,7 +52,6 @@ export default {
         border-radius: 0;
         font-size: 1.1rem;
         outline: none;
-        widows: 2rem;
     }
     input {
         font-family: "Secular One", sans-serif;

@@ -1,10 +1,10 @@
 <template>
-    <div class="live-auctioncontainer">
-        <h2  class="section-title">Live auctions</h2>
-        <div v-if="spinner" class="spinner-wrapper">
-            <spinner-1 />
-        </div>
-        <div v-if="!spinner" class="live-auction-box">
+    <profile-sub-page
+        emptyPlaceholder="There are no live auctions"
+        :isEmpty="auctions.length === 0"
+        title="Live Auctions"
+        :isLoaded="spinner">
+        <div slot="content">
             <auction-card-live
                 v-for="auction in auctions"
                 :key="auction._id"
@@ -16,24 +16,23 @@
                 :bids="auction.bids"
             />
         </div>
-    </div>
+    </profile-sub-page>
 </template>
 
 <script>
 import { AuctionCardLive } from "@/components/AuctionCards";
-import { Spinner1 } from "@/components/Spinners";
+import ProfileSubPage from "./ProfileSubPage";
 
 export default {
     name: "MyLiveAuctions",
     components: {
         AuctionCardLive,
-        Spinner1
+        ProfileSubPage
     },
     data () {
         return {
             auctions: [],
-            spinner: true,
-            searchQuery: ""
+            spinner: true
         };
     },
     created () {
@@ -53,15 +52,3 @@ export default {
     }
 };
 </script>
-
-<style lang="scss">
-.live-auctioncontainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .live-auction-box {
-        margin-top: 2rem;
-    }
-}
-</style>
