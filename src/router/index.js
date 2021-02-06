@@ -6,11 +6,9 @@ import Register from "@/views/Register.vue";
 import NewAuction from "@/views/AuctionEditor/NewAuction.vue";
 import AuctionShow from "@/views/AuctionShow/AuctionShow.vue";
 import EditAuction from "@/views/AuctionEditor/EditAuction.vue";
-import Profile from "@/views/ProfileViews/Profile.vue";
-import MyLiveAuctions from "@/views/ProfileViews/MyLiveAuctions.vue";
-import MyAuctions from "@/views/ProfileViews/MyAuctions.vue";
-import ParticipatedAuctions from "@/views/ProfileViews/ParticipatedAuctions.vue";
-import Purchased from "@/views/ProfileViews/Purchased.vue";
+import ProfilePages from "@/views/ProfileViews/ProfilePages.vue";
+import { MyAuctions, MyLiveAuctions, Participations, Purchased, Profile } from "@/views/ProfileViews";
+
 import Chat from "@/views/Chat.vue";
 import ErrorPage from "@/views/ErrorPage.vue";
 import ChatBox from "@/views/ChatBox/ChatBox.vue";
@@ -85,14 +83,16 @@ const routes = [
     },
     {
         path: "/profile",
-        name: "Profile",
-        component: Profile,
+        component: ProfilePages,
         meta: { title: "bidit | Profile" },
         beforeEnter: notAuthenticatedUserHandler,
-        redirect: {
-            name: "MyAuctions"
-        },
         children: [
+            {
+                name: "Details",
+                path: "/",
+                component: Profile,
+                meta: { title: "bidit | Profile" }
+            },
             {
                 name: "LiveAuctions",
                 path: "live-auctions",
@@ -108,7 +108,7 @@ const routes = [
             {
                 name: "Participated",
                 path: "participated",
-                component: ParticipatedAuctions,
+                component: Participations,
                 meta: { title: "bidit | Profile - participated auctions" }
             },
             {

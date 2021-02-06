@@ -1,13 +1,13 @@
 <template>
   <div class="product-sub-page-container">
     <h2 class="section-title">{{this.title}}</h2>
-     <div v-if="isLoading" class="spinner-wrapper">
-        <spinner-1 />
-    </div>
     <slot name="before" />
     <slot v-if="!isLoading && !isEmpty" name="content" />
-    <h2 v-if="isEmpty" class="empty">{{emptyPlaceholder || "No products found"}}</h2>
-    <slot name="pagination"/>
+    <div v-if="isLoading" class="spinner-wrapper">
+        <spinner-1 />
+    </div>
+    <h2 v-if="!isLoading && isEmpty" class="empty">{{emptyPlaceholder || "No products found"}}</h2>
+    <slot v-if="!isLoading" name="pagination"/>
   </div>
 </template>
 
@@ -41,12 +41,15 @@ export default {
             margin-top: 1.5rem;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: repeat(4, 5.5rem);
-            gap: 0.8rem;
+            grid-template-rows: 1fr;
+            gap: 0.6rem;
 
             @include mobile {
                 grid-template-columns: 1fr;
             }
-    }
+        }
+        .pagination-container {
+            margin-top: 1rem;
+        }
     }
 </style>

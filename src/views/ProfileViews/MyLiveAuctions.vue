@@ -3,7 +3,7 @@
         emptyPlaceholder="There are no live auctions"
         :isEmpty="auctions.length === 0"
         title="Live Auctions"
-        :isLoaded="spinner">
+        :isLoading="isLoading">
         <div slot="content">
             <auction-card-live
                 v-for="auction in auctions"
@@ -32,7 +32,7 @@ export default {
     data () {
         return {
             auctions: [],
-            spinner: true
+            isLoading: true
         };
     },
     created () {
@@ -40,13 +40,13 @@ export default {
     },
     methods: {
         async getAllParticipatedInAuction () {
-            this.spinner = true;
+            this.isLoading = true;
             try {
                 const response = await this.$http.get("/api/user/live-auctions");
                 this.auctions = response.data.auctions;
-                this.spinner = false;
+                this.isLoading = false;
             } catch (error) {
-                this.spinner = false;
+                this.isLoading = false;
             }
         }
     }

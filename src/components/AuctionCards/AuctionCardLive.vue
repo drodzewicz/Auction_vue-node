@@ -122,6 +122,7 @@ export default {
 <style lang="scss">
 .auction-card-live-wrapper{
     margin-bottom: 3rem;
+    margin-top: 2rem;
       .banner {
         background: rgb(161, 243, 120);
         color: rgb(32, 64, 28);

@@ -94,7 +94,7 @@ export default {
 .bidding-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     flex-grow: 1;
     width: 100%;

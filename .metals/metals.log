@@ -6,3 +6,4 @@
 2020.12.04 18:22:09 INFO  time: initialize in 0.52s
 2020.12.04 18:22:14 WARN  Build server is not auto-connectable.
 2020.12.04 18:22:14 WARN  no build tool detected in workspace 'D:\Coding\Auction_vue-node'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2020.12.04 19:37:30 INFO  shutting down Metals

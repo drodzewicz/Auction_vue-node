@@ -1,5 +1,5 @@
 <template>
-    <profile-sub-page :isEmpty="auctions.length === 0" title="My Auctions" :isLoaded="spinner">
+    <profile-sub-page :isEmpty="auctions.length === 0" title="My Auctions" :isLoading="isLoading">
         <router-link slot="before" class="create-auction" to="/new-auction">Create new auction<i class="fas fa-plus-square"/></router-link>
         <div class="aucion-box" slot="content">
             <auction-card-mini
@@ -42,7 +42,7 @@ export default {
             prevPage: null,
             currentPage: 1,
             auctions: [],
-            spinner: true
+            isLoading: true
         };
     },
     created () {
@@ -50,15 +50,15 @@ export default {
     },
     methods: {
         async getAllAuthorAuction () {
-            this.spinner = true;
+            this.isLoading = true;
             try {
                 const resposne = await this.$http.get(`/api/user/my-auctions?limit=8&page=${this.currentPage}`);
                 this.auctions = resposne.data.auctions.items;
                 this.nextPage = resposne.data.auctions.next;
                 this.prevPage = resposne.data.auctions.prev;
-                this.spinner = false;
+                this.isLoading = false;
             } catch (error) {
-                this.spinner = false;
+                this.isLoading = false;
             }
         }
     },

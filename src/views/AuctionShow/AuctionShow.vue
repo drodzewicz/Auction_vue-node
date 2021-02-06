@@ -232,7 +232,7 @@ export default {
 
             }
         }
-        @include mobile {
+        @include breaking-point-sm {
             flex-direction: column;
             & > * {
                 margin: 1rem 0;

@@ -1,5 +1,5 @@
 <template>
-    <profile-sub-page :isEmpty="products.length === 0" title="Participations" :isLoaded="spinner">
+    <profile-sub-page :isEmpty="products.length === 0" title="Participations" :isLoading="isLoading">
         <div class="aucion-box" slot="content">
             <auction-card-mini
                 v-for="prod in products"
@@ -40,7 +40,7 @@ export default {
             prevPage: null,
             currentPage: 1,
             products: [],
-            spinner: true
+            isLoading: true
         };
     },
     created () {
@@ -48,15 +48,15 @@ export default {
     },
     methods: {
         async getAllAuthorAuction () {
-            this.spinner = true;
+            this.isLoading = true;
             try {
                 const response = await this.$http.get(`/api/user/participations?limit=5&page=${this.currentPage}`);
                 this.products = response.data.auctions.items;
                 this.nextPage = response.data.auctions.next;
                 this.prevPage = response.data.auctions.prev;
-                this.spinner = false;
+                this.isLoading = false;
             } catch (error) {
-                this.spinner = false;
+                this.isLoading = false;
             }
         }
     },
