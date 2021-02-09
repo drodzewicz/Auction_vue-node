@@ -1,21 +1,14 @@
 <template>
     <div class="auctions-container">
-        <div class="search-filter-container">
-        </div>
-        <section class="all-offers">
-            <img class="wave-bg" src="@/assets/wave_bg.svg" alt="wave">
-            <div class="offer-wrapper">
-                <search-bar v-model="searchQuery" @search="execSearch" />
-                <spinner-1 v-if="spinner" />
-                <product-container v-if="!spinner" :auctions=auctions />
-                 <pagination
-                    :currentPage="page.current"
-                    :prev="page.prev"
-                    :next="page.next"
-                    v-model="page.current"
-                />
-            </div>
-        </section>
+        <search-bar v-model="searchQuery" @search="execSearch" />
+        <spinner-1 v-if="spinner" />
+            <product-container v-if="!spinner" :auctions=auctions />
+                <pagination
+                :currentPage="page.current"
+                :prev="page.prev"
+                :next="page.next"
+                v-model="page.current"
+            />
     </div>
 </template>
 
@@ -79,38 +72,16 @@ export default {
     align-items: center;
     width: 100%;
 
-    .all-offers {
-        width: 100%;
-        overflow-y: hidden;
-        .wave-bg {
-            width: 100%;
-            position: absolute;
-        }
-        .offer-wrapper {
-            position: relative;
-            z-index: 2;
-            background: $main-dark-blue;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 15%;
-            padding-bottom: 2rem;
-            min-height: 20vh;
-            .search-bar {
-                margin-top: 1%;
-                width: 60%;
-                max-width: 50rem;
-                margin-bottom: 2rem;
-            }
-            .more {
-                text-decoration: none;
-                color: white;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
-        }
+    .search-bar {
+        margin-top: 1%;
+        width: 60%;
+        max-width: 50rem;
+        margin: 0 auto;
+        z-index: 10;
+        position: relative;
+    }
+    .product-container{
+        margin-top: 2rem;
     }
 
 }

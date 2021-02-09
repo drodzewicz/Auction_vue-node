@@ -35,6 +35,8 @@ export default {
     display: grid;
     grid-gap: 0.5rem;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-gap: 1rem;
     @include breaking-point-md {
       grid-template-columns: 1fr 1fr 1fr;
     }
