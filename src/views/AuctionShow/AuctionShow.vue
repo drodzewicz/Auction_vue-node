@@ -1,7 +1,7 @@
 <template>
     <div class="auction-show-wrapper">
-      <spinner-1  v-if="spinner" />
-      <div  v-if="!spinner" class="auction-show-container">
+      <spinner-1  v-if="isLoading" />
+      <div  v-if="!isLoading" class="auction-show-container">
         <section class="auction-details">
             <div class="image-wrapper">
                 <v-image class="product-image" :class="{sold: shouldDisplayBuyer}" :imageUrl="image" />
@@ -33,7 +33,7 @@
             </div>
             <div class="text-details">
                 <h2 class="ptoduct-title">{{name}}</h2>
-                <div class="dates">
+                <div v-if="startDate && endDate" class="dates">
                     <div class="date date-start">
                         <span class="label">Auction starts:</span>
                         <span class="calendar">
@@ -88,7 +88,7 @@ export default {
     },
     data () {
         return {
-            spinner: true,
+            isLoading: true,
             id: null,
             name: "",
             description: "",
@@ -134,12 +134,6 @@ export default {
     },
     methods: {
         ...mapGetters(["getUser", "GET_CURRENCY"]),
-        getDateDate (date) {
-            return moment(date).format("MM-DD-YYYY");
-        },
-        getDateTime (date) {
-            return moment(date).format("hh:mm");
-        },
         async buyAuction () {
             try {
                 const response = await this.$http.patch(`api/auction/${this.id}/buy`);
@@ -159,17 +153,17 @@ export default {
                 this.image = image;
                 this.price = price;
 
-                this.endDate = endDate !== undefined ? new Date(endDate) : undefined;
-                this.startDate = startDate !== undefined ? new Date(startDate) : undefined;
+                this.endDate = endDate ? new Date(endDate) : undefined;
+                this.startDate = startDate ? new Date(startDate) : undefined;
                 this.bids = bids.reverse();
                 this.author = author !== undefined ? author.username : undefined;
                 this.buyer = buyer !== undefined ? buyer.username : undefined;
 
                 this.joinBiddingRoom();
-                this.spinner = false;
+                this.isLoading = false;
             } catch (error) {
                 bus.$emit("changeMessage", "failed to buy auction", "error");
-                this.spinner = false;
+                this.isLoading = false;
                 this.$router.replace("/error-notfound");
             }
         },
@@ -182,6 +176,12 @@ export default {
         },
         leaveBiddingRoom () {
             this.$sock.emit("leaveBidding", { room: this.id });
+        },
+        getDateDate (date) {
+            return moment(date).format("MM-DD-YYYY");
+        },
+        getDateTime (date) {
+            return moment(date).format("hh:mm");
         }
     }
 };

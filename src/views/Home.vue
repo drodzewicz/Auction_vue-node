@@ -12,7 +12,6 @@
         <section class="offers">
             <img class="wave-bg" src="@/assets/wave_bg.svg" alt="wave">
             <div class="offer-wrapper">
-                <search-bar v-model="searchQuery" @search="execSearch" />
                 <spinner-1 v-if="spinner" />
                 <product-container v-if="!spinner" :auctions=auctions />
                 <router-link v-if="!spinner" to="/auction" class="more">
@@ -28,20 +27,17 @@
 import { Spinner1 } from "@/components/Spinners";
 import { mapGetters } from "vuex";
 import ProductContainer from "@/components/ProductContainer";
-import SearchBar from "@/components/Inputs/SearchBar";
 
 export default {
     name: "Home",
     components: {
         ProductContainer,
-        Spinner1,
-        SearchBar
+        Spinner1
     },
     data () {
         return {
             auctions: [],
-            spinner: true,
-            searchQuery: ""
+            spinner: true
         };
     },
     created () {
@@ -49,9 +45,6 @@ export default {
     },
     methods: {
         ...mapGetters(["getUser"]),
-        execSearch () {
-            console.log(this.searchQuery);
-        },
         async fetchAuctions () {
             this.spinner = true;
             try {
@@ -86,6 +79,8 @@ export default {
         #love-icon {
             height: 5rem;
             margin-top: 1rem;
+            opacity: 0;
+            animation: element-apear 1s ease-out forwards 2s;
             @include mobile {
                  display: none;
             }
@@ -93,6 +88,8 @@ export default {
         #bags {
             height: 25rem;
             width: 100%;
+            opacity: 0;
+            animation: element-apear 1s ease-out forwards 2s;
             @include breaking-point-sm {
                 height: 20rem;
             }
@@ -114,14 +111,24 @@ export default {
             .welcome {
                 margin: 0;
                 font-size: 3rem;
+                animation: element-slide-left 1s ease-out forwards 0.5s;
+                opacity: 0;
                 @include breaking-point-sm {
                  font-size: 2.5rem;
+                 text-align: center;
                 }
             }
             .welcome-text {
                 margin: 0;
+                opacity: 0;
                 font-size: 1.5rem;
                 color: rgb(86, 86, 100);
+                &:nth-child(2) {
+                    animation: element-slide-left 1s ease-out forwards 1s;
+                }
+                &:nth-child(3) {
+                    animation: element-slide-left 1s ease-out forwards 1.6s;
+                }
                 @include breaking-point-sm {
                  font-size: 1rem;
                 }
@@ -153,6 +160,7 @@ export default {
                 margin-bottom: 2rem;
             }
             .more {
+                margin-top: 2rem;
                 text-decoration: none;
                 color: white;
                 display: flex;

@@ -1,14 +1,13 @@
 <template>
     <div class="auctions-container">
-        <search-bar v-model="searchQuery" @search="execSearch" />
-        <spinner-1 v-if="spinner" />
-            <product-container v-if="!spinner" :auctions=auctions />
-                <pagination
+        <spinner-1 v-if="isLoading" />
+        <product-container v-if="!isLoading" :auctions=auctions />
+            <pagination
                 :currentPage="page.current"
                 :prev="page.prev"
                 :next="page.next"
                 v-model="page.current"
-            />
+        />
     </div>
 </template>
 
@@ -16,7 +15,6 @@
 import { Spinner1 } from "@/components/Spinners";
 import { mapGetters } from "vuex";
 import ProductContainer from "@/components/ProductContainer";
-import SearchBar from "@/components/Inputs/SearchBar";
 import Pagination from "@/components/Pagination";
 
 export default {
@@ -24,7 +22,6 @@ export default {
     components: {
         ProductContainer,
         Spinner1,
-        SearchBar,
         Pagination
     },
     data () {
@@ -35,8 +32,7 @@ export default {
                 prev: null,
                 next: null
             },
-            spinner: true,
-            searchQuery: ""
+            isLoading: true
         };
     },
     created () {
@@ -44,21 +40,28 @@ export default {
     },
     methods: {
         ...mapGetters(["getUser"]),
-        execSearch () {
-            console.log(this.searchQuery);
-        },
         async fetchAuctions () {
-            this.spinner = true;
+            this.isLoading = true;
             try {
-                const reposne = await this.$http.get("/api/auction?page=1&limit=8&finished=false");
+                const reposne = await this.$http.get(`/api/auction?page=${this.page.current}&limit=8&finished=false`);
                 const { items, next, prev } = reposne.data.auctions;
                 this.auctions = items;
-                this.spinner = false;
+                this.isLoading = false;
                 this.page.next = next;
                 this.page.prev = prev;
             } catch (error) {
-                this.spinner = false;
+                this.isLoading = false;
             }
+        }
+    },
+    computed: {
+        getCurrentPage () {
+            return this.page.current;
+        }
+    },
+    watch: {
+        getCurrentPage () {
+            this.fetchAuctions();
         }
     }
 };
@@ -82,6 +85,10 @@ export default {
     }
     .product-container{
         margin-top: 2rem;
+    }
+    .pagination-container {
+        margin-top: 1rem;
+        margin-bottom: 3rem;
     }
 
 }
