@@ -24,4 +24,5 @@ router.route("/purchased")
 router.route("/live-auctions")
     .get(isLoggedIn, getLoggedInUserLiveAuctions);
 
+
 module.exports = router;

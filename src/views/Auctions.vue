@@ -43,7 +43,7 @@ export default {
         async fetchAuctions () {
             this.isLoading = true;
             try {
-                const reposne = await this.$http.get(`/api/auction?page=${this.page.current}&limit=8&finished=false`);
+                const reposne = await this.$http.get(`/api/auction?page=${this.page.current}&limit=16&finished=false`);
                 const { items, next, prev } = reposne.data.auctions;
                 this.auctions = items;
                 this.isLoading = false;

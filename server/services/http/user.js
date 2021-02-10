@@ -56,4 +56,14 @@ userService.loginJWT = async function (req, res) {
     }
 };
 
+userService.changeAvatarImage = async function (req, res) {
+    const { id } = req.user;
+    try {
+        const foundUser = await User.findById(id);
+        return res.json(foundUser);
+    } catch (error) {
+        return res.json({ msg: "no user" });
+    }
+};
+
 module.exports = userService;
