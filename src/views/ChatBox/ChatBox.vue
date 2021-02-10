@@ -1,13 +1,13 @@
 <template>
     <div class="container">
         <div class="section">
-            <chat-header :username="user.username" :isOnline="userOnlineCount === 2" />
+            <chat-header :username="user.username" :imageLink="user.avatarImage" :isOnline="userOnlineCount === 2" />
             <div ref="convo" class="scrollable-content chat-box-wrapper">
-                <chat-conversation :posts="conversation" :newPosts="newMessages" :authorUsername="getUser()" />
+                <chat-conversation :posts="conversation" :newPosts="newMessages" :authorUsername="GET_USER().username" />
             </div>
             <chat-input @post="sendAMessage" />
         </div>
-</div>
+    </div>
 </template>
 
 <script>
@@ -28,7 +28,8 @@ export default {
             userOnlineCount: 0,
             user: {
                 username: "",
-                id: ""
+                id: "",
+                avatarImage: ""
             },
             chatId: "",
             spinner: true,
@@ -55,14 +56,13 @@ export default {
         this.leaveChatRoom();
     },
     methods: {
-        ...mapGetters(["getUser"]),
+        ...mapGetters(["GET_USER"]),
         async getChatRoomInfo () {
             try {
                 const response = await this.$http.get(`/api/chat/${this.$route.params.id}`);
                 this.spinner = false;
                 this.user = response.data.chatRoom.participants
-                    .filter(user => user.user.username !== this.getUser())
-                    .map(user => ({ username: user.user.username, id: user.user.id }))[0];
+                    .filter(user => user.username !== this.GET_USER().username)[0];
                 this.chatId = response.data.chatRoom._id;
                 this.conversation = response.data.chatRoom.messages;
 
@@ -80,7 +80,7 @@ export default {
             this.newMessages.push(data);
         },
         leaveChatRoom () {
-            this.$sock.emit("unsubscribe", { room: this.chatId, user: this.getUser() });
+            this.$sock.emit("unsubscribe", { room: this.chatId, user: this.GET_USER().username });
             this.$sock.removeListener("roomInfo", this.getUserCountInRoom);
             this.$sock.removeListener("sendInfo", this.getMessage);
         },

@@ -138,10 +138,7 @@ auctionService.createNewAuction = async function (req, res) {
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         image: req.body.image,
-        author: {
-            id: req.user.id,
-            username: req.user.username
-        }
+        author: req.user.id
     });
 
     try {

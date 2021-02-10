@@ -17,11 +17,11 @@ import Auctions from "@/views/Auctions.vue";
 import store from "../store";
 
 const notAuthenticatedUserHandler = (to, from, next) => {
-    if (store.getters.getUser) {
+    if (store.getters.GET_USER.username) {
         next();
     } else {
-        store.watch(() => store.getters.getUser, () => {
-            if (store.getters.getUser !== null) {
+        store.watch(() => store.getters.GET_USER.username, () => {
+            if (store.getters.GET_USER.username !== null) {
                 next();
             } else {
                 next("/login");

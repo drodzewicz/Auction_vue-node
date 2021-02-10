@@ -85,7 +85,7 @@ export default {
         this.leaveBiddingRoom();
     },
     methods: {
-        ...mapGetters(["getUser"]),
+        ...mapGetters(["GET_USER"]),
         senfBid (data, roomId) {
             if (roomId === this.id) {
                 this.bids.unshift(data);
@@ -108,7 +108,7 @@ export default {
     },
     computed: {
         isWinning () {
-            return this.getUser() === this.bids[0].author.username;
+            return this.GET_USER().username === this.bids[0].author.username;
         },
         isEnded () {
             const timeNow = new Date();

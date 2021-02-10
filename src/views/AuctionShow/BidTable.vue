@@ -11,7 +11,7 @@
                         v-on:timerStatus="setAuctionStatus"
                     />
                 </span>
-                <place-bid-input v-if="this.isAuctionLive && getUser() && !isUserAuthor" :auctionId="auctionId" />
+                <place-bid-input v-if="this.isAuctionLive && GET_USER().username && !isUserAuthor" :auctionId="auctionId" />
                 <div class="bid-box">
                     <bid-card
                         v-for="bid in bids"
@@ -67,14 +67,14 @@ export default {
         }
     },
     methods: {
-        ...mapGetters(["getUser"]),
+        ...mapGetters(["GET_USER"]),
         setAuctionStatus (status) {
             this.isAuctionLive = status;
         }
     },
     computed: {
         isWinning () {
-            return this.bids.length !== 0 && this.bids[0].author.username === this.getUser();
+            return this.bids.length !== 0 && this.bids[0].author.username === this.GET_USER().username;
         },
         isEnded () {
             const timeNow = new Date();

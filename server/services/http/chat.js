@@ -6,20 +6,7 @@ const chatService = {};
 chatService.createARoom = async function (req, res) {
     const { foundUser, user } = req;
     const newChatRoom = new Chat({
-        participants: [
-            {
-                user: {
-                    id: user.id,
-                    username: user.username
-                }
-            },
-            {
-                user: {
-                    id: foundUser.id,
-                    username: foundUser.username
-                }
-            }
-        ]
+        participants: [user.id, foundUser.id]
     });
     try {
         const savedChatRoom = await newChatRoom.save();
@@ -35,7 +22,9 @@ chatService.createARoom = async function (req, res) {
 
 chatService.getMyChatRooms = async function (req, res) {
     try {
-        const foundChatRooms = await Chat.find({ participants: { $elemMatch: { "user.username": req.user.username } } });
+        const foundChatRooms = await Chat.find({
+            participants: req.user.id
+        }).populate("participants");
         res.status(200).json({
             chatRooms: foundChatRooms
         });
@@ -49,14 +38,12 @@ chatService.getMyChatRoomsWithUndreadMessages = async function (req, res) {
     try {
         const foundChatRooms = await Chat.find({
             participants: {
-                $elemMatch: {
-                    "user.username": req.user.username
-                }
+                $elemMatch: req.user._id
             },
             messages: {
                 $elemMatch: {
                     recieved: false,
-                    "author.username": { $ne: req.user.username }
+                    author: { $ne: req.user._id }
                 }
             }
         }, "_id");

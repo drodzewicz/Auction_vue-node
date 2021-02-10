@@ -178,7 +178,7 @@ export default {
         }
     },
     methods: {
-        ...mapGetters(["getUser"]),
+        ...mapGetters(["GET_USER"]),
         submitFunction (event) {
             event.preventDefault();
             const formData = {
@@ -272,7 +272,7 @@ export default {
             return mainFieldValid && descriptionValid && dateFieldsValidation;
         },
         isUserAuthor () {
-            return this.getUser() === this.author;
+            return this.GET_USER().username === this.author;
         },
         isStarted () {
             const timeNow = new Date();

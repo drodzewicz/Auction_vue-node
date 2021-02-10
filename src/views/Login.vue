@@ -27,7 +27,7 @@
 
 <script>
 import { TextInput } from "@/components/Inputs";
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations } from "vuex";
 import { Spinner2 } from "@/components/Spinners";
 
 export default {
@@ -65,8 +65,7 @@ export default {
         };
     },
     methods: {
-        ...mapGetters(["getUser"]),
-        ...mapMutations(["UPDATE_USER", "UPDATE_USERID"]),
+        ...mapMutations(["UPDATE_USER", "UPDATE_AVATAR", "UPDATE_USERID"]),
         validateFieldLogin (fieldName, val) {
             this.loginFields = this.loginFields.map(field => {
                 if (fieldName === field.name) {
@@ -85,6 +84,7 @@ export default {
                     password: this.loginFields[1].value
                 });
                 this.UPDATE_USER(response.data.user.username);
+                this.UPDATE_AVATAR(response.data.user.avatarImage || "");
                 this.UPDATE_USERID(response.data.user.id);
                 this.$sock.open();
                 this.spinner = false;

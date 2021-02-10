@@ -36,11 +36,8 @@ const auctionSchema = new Schema({
         type: Date
     },
     author: {
-        id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
-        },
-        username: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     },
     buyer: {
         id: {

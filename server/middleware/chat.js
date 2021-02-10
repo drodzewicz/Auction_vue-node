@@ -61,7 +61,7 @@ chatMiddleware.checkIfUserExists = async function (req, res, next) {
 chatMiddleware.getRoom = async function (req, res, next) {
     const { id } = req.params;
     try {
-        const foundChatRoom = await Chat.findOne({ _id: id });
+        const foundChatRoom = await Chat.findOne({ _id: id }).populate("participants");
         res.foundRoom = foundChatRoom;
         return next();
     } catch (error) {

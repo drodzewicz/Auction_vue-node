@@ -21,7 +21,7 @@
                         v-for="room in lsitOfContacts"
                         :key="room.id"
                     >
-                        <VImage imageUrl="" defaultImage="/default_avatar_image.svg"  />
+                        <VImage :imageUrl="room.avatar" defaultImage="/default_avatar_image.svg"  />
                         <span v-if="room.unreadMessages" class="dot"></span>
                         <span class="username">{{room.username}}</span>
                     </div>
@@ -36,7 +36,7 @@
                             :key="user.id"
                             @click="createChatRoom(user.username, index)"
                         >
-                            <VImage imageUrl="" defaultImage="/default_avatar_image.svg"  />
+                            <VImage :imageUrl="user.avatar" defaultImage="/default_avatar_image.svg"  />
                             <span class="username">{{user.username}}</span>
                             <span class="msg"><i class="fas fa-paper-plane" /></span>
                         </div>
@@ -76,7 +76,7 @@ export default {
         });
     },
     methods: {
-        ...mapGetters(["getUser"]),
+        ...mapGetters(["GET_USER"]),
         toggleHideRooms () {
             this.hideRooms = !this.hideRooms;
         },
@@ -89,12 +89,12 @@ export default {
             this.myChatRooms.spinner = true;
             try {
                 const mychatRoomsFetched = await this.$http.get("/api/chat/my-chat");
-                const unreadChatRooms = await this.$http.get("/api/chat/unread-messages");
+                // const unreadChatRooms = await this.$http.get("/api/chat/unread-messages");
                 this.myChatRooms.spinner = false;
                 this.myChatRooms.rooms = mychatRoomsFetched.data.chatRooms.map(room => {
-                    if (unreadChatRooms.data.chatRooms.find(unreadRoom => unreadRoom._id === room._id)) {
-                        return ({ ...room, unreadMessages: true });
-                    }
+                    // if (unreadChatRooms.data.chatRooms.find(unreadRoom => unreadRoom._id === room._id)) {
+                    //     return ({ ...room, unreadMessages: true });
+                    // }
                     return ({ ...room, unreadMessages: false });
                 });
             } catch (error) {
@@ -105,10 +105,10 @@ export default {
             this.searchedUsers.spinner = true;
             try {
                 const response = await this.$http.get(`/api/chat/users?username=${this.searchQuery}`);
-                let tempList = response.data.users.filter(user => user.username !== this.getUser());
+                let tempList = response.data.users.filter(user => user.username !== this.GET_USER().username);
                 tempList = tempList.filter(user => !this.lsitOfContacts.find(room => room.username === user.username));
                 this.searchedUsers.spinner = false;
-                this.searchedUsers.users = tempList.map(user => ({ id: user._id, username: user.username }));
+                this.searchedUsers.users = tempList.map(user => ({ id: user._id, username: user.username, avatar: user.avatarImage || "" }));
             } catch (error) {
                 bus.$emit("changeMessage", error.response.msg, "error");
                 this.searchedUsers.spinner = false;
@@ -134,11 +134,11 @@ export default {
     computed: {
         lsitOfContacts () {
             return this.myChatRooms.rooms.map(room => {
+                const participant = room.participants.filter(user => user.username !== this.GET_USER().username)[0];
                 return {
                     id: room._id,
-                    username: room.participants
-                        .filter(user => user.user.username !== this.getUser())
-                        .map(user => user.user.username)[0],
+                    username: participant.username,
+                    avatar: participant.avatarImage || "",
                     unreadMessages: room.unreadMessages
                 };
             });

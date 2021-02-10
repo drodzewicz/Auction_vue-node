@@ -5,7 +5,10 @@ const router = express.Router();
 const passport = require("passport");
 
 const { isLoggedIn } = require("../../middleware/user");
-const { registerUser, loginJWT } = require("../../services/http/user");
+const {
+    registerUser,
+    loginJWT
+} = require("../../services/http/user");
 
 require("../../configs/passport-jwt")(passport);
 require("../../configs/passport-local")(passport);
@@ -34,10 +37,7 @@ router.route("/login")
 
 router.route("/isAuthenticated")
     .get(isLoggedIn, (req, res) => {
-        res.status(200).json({
-            id: req.user.id,
-            user: req.user.username
-        });
+        res.status(200).json(req.user);
     });
 
 module.exports = router;

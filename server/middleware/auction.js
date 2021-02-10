@@ -106,7 +106,10 @@ auctionMiddleware.getAuction = async function (req, res, next) {
     const auctionId = req.params.id;
     let foundAuction;
     try {
-        foundAuction = await Auction.findById(auctionId);
+        foundAuction = await Auction.findOne({ _id: auctionId }).populate({
+            path: "author",
+            select: "username _id avatarImage"
+        });
         if (foundAuction == null) {
             return res.status(404).json({
                 err: true,

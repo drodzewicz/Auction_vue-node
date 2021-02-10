@@ -25,7 +25,6 @@
 
 <script>
 import { Spinner1 } from "@/components/Spinners";
-import { mapGetters } from "vuex";
 import ProductContainer from "@/components/ProductContainer";
 
 export default {
@@ -44,7 +43,6 @@ export default {
         this.fetchAuctions();
     },
     methods: {
-        ...mapGetters(["getUser"]),
         async fetchAuctions () {
             this.spinner = true;
             try {

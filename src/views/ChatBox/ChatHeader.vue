@@ -1,10 +1,12 @@
 <template>
 <div class="chat-header">
     <v-image :imageUrl="imageLink" defaultImage="/default_avatar_image.svg"  />
-    <h2 class="chat-room-title">{{this.username}}</h2>
-    <div class="status">
-        <span class="dot" :class="{ online: isOnline}"></span>
-        <span class="status-text">{{this.isOnline ? "Online" : "Offline"}}</span>
+    <div class="text-container">
+        <h2 class="chat-room-title">{{this.username}}</h2>
+        <div class="status">
+            <span class="dot" :class="{ online: isOnline}"></span>
+            <span class="status-text">{{this.isOnline ? "Online" : "Offline"}}</span>
+        </div>
     </div>
 </div>
 </template>
@@ -38,13 +40,19 @@ export default {
         flex-direction: row;
         align-items: center;
         flex-wrap: wrap;
+        box-sizing: border-box;
+        padding: 0 0.5rem;
         img {
-            $avatar-size: 1.5rem;
+            $avatar-size: 3rem;
             width: $avatar-size;
             height: $avatar-size;
             border-radius: 10rem;
             object-fit: cover;
             margin-right: 0.5rem;
+        }
+        .text-container {
+            display: flex;
+            flex-direction: column;
         }
         .chat-room-title {
             flex-grow: 1;

@@ -7,8 +7,8 @@
                 <v-image class="product-image" :class="{sold: shouldDisplayBuyer}" :imageUrl="image" />
                 <img v-if="shouldDisplayBuyer" class="sold-tag" src="@/assets/sold_image.png" alt="">
                 <div class="user-bar author-bar">
-                    <VImage imageUrl="" defaultImage="/default_avatar_image.svg"  />
-                    <span>{{this.author}}</span>
+                    <VImage :imageUrl="this.author.avatar" defaultImage="/default_avatar_image.svg"  />
+                    <span>{{this.author.username}}</span>
                 </div>
             </div>
             <div class="price-and-buttins">
@@ -16,7 +16,7 @@
                     <span>{{`${price} ${this.GET_CURRENCY()}`}}</span>
                 </div>
                 <button
-                    v-if="startDate===undefined && buyer===undefined && getUser() && !isUserAuthor"
+                    v-if="startDate===undefined && buyer===undefined && GET_USER().username && !isUserAuthor"
                     @click="buyAuction"
                     class="buynow-btn"
                 >Buy Now</button>
@@ -96,7 +96,10 @@ export default {
             price: null,
             endDate: "",
             startDate: "",
-            author: "",
+            author: {
+                username: "",
+                avatar: ""
+            },
             buyer: "",
             bids: []
         };
@@ -121,7 +124,7 @@ export default {
             return timeNow > endDateParsed;
         },
         isUserAuthor () {
-            return this.getUser() === this.author;
+            return this.GET_USER().username === this.author.username;
         },
         isEditable () {
             return !this.isStarted && this.isUserAuthor && (this.buyer === "" || this.buyer === undefined);
@@ -133,12 +136,12 @@ export default {
         }
     },
     methods: {
-        ...mapGetters(["getUser", "GET_CURRENCY"]),
+        ...mapGetters(["GET_USER", "GET_CURRENCY"]),
         async buyAuction () {
             try {
                 const response = await this.$http.patch(`api/auction/${this.id}/buy`);
                 bus.$emit("changeMessage", response.data.msg, "success");
-                this.buyer = this.getUser();
+                this.buyer = this.GET_USER().username;
             } catch (error) {
                 bus.$emit("changeMessage", "failed to buy auction", "error");
             }
@@ -156,7 +159,10 @@ export default {
                 this.endDate = endDate ? new Date(endDate) : undefined;
                 this.startDate = startDate ? new Date(startDate) : undefined;
                 this.bids = bids.reverse();
-                this.author = author !== undefined ? author.username : undefined;
+                this.author = {
+                    username: author.username || "",
+                    avatar: author.avatarImage || ""
+                };
                 this.buyer = buyer !== undefined ? buyer.username : undefined;
 
                 this.joinBiddingRoom();

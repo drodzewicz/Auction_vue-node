@@ -13,7 +13,6 @@
 
 <script>
 import { Spinner1 } from "@/components/Spinners";
-import { mapGetters } from "vuex";
 import ProductContainer from "@/components/ProductContainer";
 import Pagination from "@/components/Pagination";
 
@@ -39,7 +38,6 @@ export default {
         this.fetchAuctions();
     },
     methods: {
-        ...mapGetters(["getUser"]),
         async fetchAuctions () {
             this.isLoading = true;
             try {

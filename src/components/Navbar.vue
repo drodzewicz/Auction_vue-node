@@ -4,7 +4,7 @@
     <router-link id="app-logo" to="/">
     <img src="../assets/logo.svg" />
     </router-link>
-    <div v-if="getUser==null" class="authenticated-false nav-menu">
+    <div v-if="GET_USER.username==null" class="authenticated-false nav-menu">
     <router-link class="nav-item" to="/login">Login</router-link>
     </div>
     <div v-else class="authenticated-true nav-menu">
@@ -13,8 +13,8 @@
         </router-link>
         <profile-dropdown>
             <button slot="profile-btn" class="nav-item profile-btn">
-                <VImage imageUrl="" defaultImage="/default_avatar_image.svg"  />
-                <span class="username">{{getUser}}</span>
+                <VImage :imageUrl="GET_USER.avatar" defaultImage="/default_avatar_image.svg"  />
+                <span class="username">{{GET_USER.username}}</span>
             </button>
         </profile-dropdown>
     </div>
@@ -36,7 +36,7 @@ export default {
         ProfileDropdown,
         PopDown
     },
-    computed: mapGetters(["getUser"])
+    computed: mapGetters(["GET_USER"])
 };
 </script>
 

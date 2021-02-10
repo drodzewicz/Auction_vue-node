@@ -1,11 +1,11 @@
 <template>
     <profile-sub-page title="Profile" :isLoaded="spinner">
         <div slot="content" class="profile-content">
-            <VImage :imageUrl="imageLink" defaultImage="/default_avatar_image.svg" class="user-avatar" />
+            <VImage :imageUrl="GET_USER().avatar" defaultImage="/default_avatar_image.svg" class="user-avatar" />
             <form>
                  <text-input
-                    v-model="imageLink"
-                    :value="imageLink"
+                    v-model="newImage"
+                    :value="newImage"
                     name="avatar url"
                 />
                 <button class="primary-btn" type="submit" :disabled="spinner" @click="submitImageChange">
@@ -22,6 +22,7 @@ import ProfileSubPage from "./ProfileSubPage";
 import VImage from "@/components/VImage";
 import { TextInput } from "@/components/Inputs";
 import { Spinner2 } from "@/components/Spinners";
+import { mapGetters } from "vuex";
 
 export default {
     name: "Profile",
@@ -34,13 +35,19 @@ export default {
     data () {
         return {
             spinner: false,
-            imageLink: ""
+            newImage: ""
         };
     },
     methods: {
-        submitImageChange (e) {
+        ...mapGetters(["GET_USER"]),
+        async submitImageChange (e) {
             e.preventDefault();
-            console.log("submitting");
+            try {
+                await this.$http.put("/api/user/changeAvatar", { avatarImage: this.newImage });
+                this.$store.commit("UPDATE_AVATAR", this.newImage);
+            } catch (error) {
+                console.log("ERRR");
+            }
         }
     }
 };

@@ -54,9 +54,11 @@ export default {
     },
     methods: {
         updateValue (value) {
-            this.errorState = checkValidation(value, this.validation);
             this.$emit("input", value);
-            this.$emit("validateField", this.name, this.errorState.length === 0);
+            if (this.validation) {
+                this.errorState = checkValidation(value, this.validation);
+                this.$emit("validateField", this.name, this.errorState.length === 0);
+            }
         }
     },
     computed: {

@@ -10,7 +10,7 @@ module.exports = (passport) => {
                 }
                 if (user) {
                     if (await user.isValidPassword(password)) {
-                        done(null, { id: user._id, username: user.username });
+                        done(null, { id: user._id, username: user.username, avatarImage: user.avatarImage });
                     } else {
                         done(null, null);
                     }
@@ -39,7 +39,7 @@ module.exports = (passport) => {
                 });
             } else {
                 done({
-                    msg: "Nieznany ID"
+                    msg: "bad ID"
                 });
             }
         });

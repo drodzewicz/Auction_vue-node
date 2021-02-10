@@ -23,7 +23,7 @@ export default {
         this.authenticateUser();
     },
     methods: {
-        ...mapGetters(["getUser", "GET_USERID"]),
+        ...mapGetters(["GET_USER", "GET_USERID"]),
         listenForNotification (data) {
             bus.$emit("changeMessage", `new message from ${data.newMessage}`, "", `/chat/${data.roomId}`);
             bus.$emit("markUnreadMessage", data.roomId);
@@ -32,12 +32,12 @@ export default {
             bus.$emit("changeMessage", `you have been outbiddet on ${data.auctionName}`, "", `/auction/${data.roomId}`);
         },
         async authenticateUser () {
-            this.$store.watch(() => this.getUser(), () => {
-                if (this.getUser()) {
+            this.$store.watch(() => this.GET_USER().username, () => {
+                if (this.GET_USER().username) {
                     this.$sock.emit("joinUserRoom", { userId: this.GET_USERID() });
                     this.$sock.on("chatUserInfo", this.listenForNotification);
                     this.$sock.on("chatUserBidInfo", this.listenForBidNotification);
-                } else if (this.getUser() == null) {
+                } else if (this.GET_USER().username == null) {
                     this.$sock.removeListener("chatUserInfo", this.listenForNotification);
                     this.$sock.removeListener("chatUserBidInfo", this.listenForBidNotification);
                 }
@@ -46,6 +46,7 @@ export default {
                 const response = await this.$http.get("api/auth/isAuthenticated");
                 this.$sock.open();
                 this.$store.commit("UPDATE_USER", response.data.user);
+                this.$store.commit("UPDATE_AVATAR", response.data.avatarImage || "");
                 this.$store.commit("UPDATE_USERID", response.data.id);
             } catch (error) {
                 this.$store.commit("UPDATE_USER", null);

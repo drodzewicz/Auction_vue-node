@@ -3,11 +3,12 @@ import vueInstance from "@/main";
 
 const state = {
     user: false,
+    avatar: "",
     userId: null
 };
 
 const getters = {
-    getUser: (state) => state.user,
+    GET_USER: (state) => ({ username: state.user, avatar: state.avatar }),
     GET_USERID: (state) => state.userId
 };
 
@@ -26,6 +27,9 @@ const actions = {
 const mutations = {
     UPDATE_USER (state, username) {
         state.user = username;
+    },
+    UPDATE_AVATAR (state, avatarImage) {
+        state.avatar = avatarImage;
     },
     UPDATE_USERID (state, userId) {
         state.userId = userId;

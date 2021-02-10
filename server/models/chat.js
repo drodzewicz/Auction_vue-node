@@ -4,11 +4,8 @@ const Schema = mongoose.Schema;
 const chatSchema = new Schema({
     participants: [
         {
-            _id: false,
-            user: {
-                id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-                username: String
-            }
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
         }
     ],
     messages: [
@@ -22,10 +19,7 @@ const chatSchema = new Schema({
                 type: Boolean,
                 default: true
             },
-            author: {
-                id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-                username: String
-            }
+            author: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
         }
     ]
 });

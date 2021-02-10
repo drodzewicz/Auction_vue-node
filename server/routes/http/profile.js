@@ -12,6 +12,8 @@ const {
     getLoggedInUserParticipatedAuctions
 } = require("../../services/http/auction");
 
+const { changeAvatarImage } = require("../../services/http/user");
+
 router.route("/my-auctions")
     .get(isLoggedIn, getLoggedInUserAuctions);
 
@@ -24,5 +26,6 @@ router.route("/purchased")
 router.route("/live-auctions")
     .get(isLoggedIn, getLoggedInUserLiveAuctions);
 
+router.route("/changeAvatar").put(isLoggedIn, changeAvatarImage);
 
 module.exports = router;

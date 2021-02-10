@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 import { bus } from "@/main";
 import AuctionEditor from "./AuctionEditor";
 
@@ -13,7 +12,6 @@ export default {
         AuctionEditor
     },
     methods: {
-        ...mapGetters(["getUser"]),
         async updateAuction (data) {
             const { name, description, tags, image, price, startDate, endDate } = data;
             const updatedAuction = { name, description, tags, image, price, startDate, endDate };
