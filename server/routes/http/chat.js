@@ -5,7 +5,6 @@ const { isLoggedIn } = require("../../middleware/user");
 const {
     createARoom,
     getMyChatRooms,
-    createPost,
     getUsersByQuery,
     readUnrecievedMessages,
     getMyChatRoomsWithUndreadMessages
@@ -33,8 +32,7 @@ router.route("/:id")
         res.status(200).json({
             chatRoom: res.foundRoom
         });
-    })
-    .patch(isLoggedIn, getRoom, createPost);
+    });
 
 router.route("/:id/recieve")
     .patch(isLoggedIn, getRoom, readUnrecievedMessages);

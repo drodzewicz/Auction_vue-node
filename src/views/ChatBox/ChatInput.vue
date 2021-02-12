@@ -47,6 +47,7 @@ export default {
             outline: none;
             background: transparent;
             border: none;
+            font-size: 1rem;
         }
         .send-post-button {
             outline: none;

@@ -25,11 +25,11 @@ export default {
     methods: {
         ...mapGetters(["GET_USER", "GET_USERID"]),
         listenForNotification (data) {
-            bus.$emit("changeMessage", `new message from ${data.newMessage}`, "", `/chat/${data.roomId}`);
+            bus.$emit("changeMessage", `new message from ${data.newMessage}`, "");
             bus.$emit("markUnreadMessage", data.roomId);
         },
         listenForBidNotification (data) {
-            bus.$emit("changeMessage", `you have been outbiddet on ${data.auctionName}`, "", `/auction/${data.roomId}`);
+            bus.$emit("changeMessage", `you have been outbiddet on ${data.auctionName}`, "");
         },
         async authenticateUser () {
             this.$store.watch(() => this.GET_USER().username, () => {
@@ -63,6 +63,7 @@ body {
     padding: 0;
     margin: 0;
     font-family: "Secular One", sans-serif;
+    overflow-y: scroll;
 }
 #app {
     display: flex;

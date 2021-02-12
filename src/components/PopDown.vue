@@ -18,7 +18,6 @@ export default {
     },
     created () {
         bus.$on("changeMessage", (message, type) => {
-            console.log(message, type);
             this.show = message !== this.content;
             this.content = message;
             this.messageType = type;

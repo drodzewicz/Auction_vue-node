@@ -37,13 +37,11 @@ chatService.getMyChatRooms = async function (req, res) {
 chatService.getMyChatRoomsWithUndreadMessages = async function (req, res) {
     try {
         const foundChatRooms = await Chat.find({
-            participants: {
-                $elemMatch: req.user._id
-            },
+            participants: req.user.id,
             messages: {
                 $elemMatch: {
                     recieved: false,
-                    author: { $ne: req.user._id }
+                    "author.username": { $ne: req.user.username }
                 }
             }
         }, "_id");
@@ -70,31 +68,6 @@ chatService.readUnrecievedMessages = async function (req, res) {
     try {
         await foundRoom.save();
         return res.status(200).json({ msg: `user ${user.username} recieved all unread messages` });
-    } catch (error) {
-        return res.status(400).json({
-            msg: Chat.processErrors(error)
-        });
-    }
-};
-
-chatService.createPost = async function (req, res) {
-    const { foundRoom } = res;
-    const { message, recieved } = req.body;
-    try {
-        const newMessage = {
-            author: {
-                id: req.user.id,
-                username: req.user.username
-            },
-            content: message,
-            recieved: recieved,
-            timeStamp: new Date()
-        };
-        foundRoom.messages.push(newMessage);
-        await foundRoom.save();
-        res.status(200).json({
-            message: newMessage
-        });
     } catch (error) {
         return res.status(400).json({
             msg: Chat.processErrors(error)

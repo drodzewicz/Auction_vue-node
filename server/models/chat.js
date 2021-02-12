@@ -19,7 +19,10 @@ const chatSchema = new Schema({
                 type: Boolean,
                 default: true
             },
-            author: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
+            author: {
+                id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                username: String
+            }
         }
     ]
 });

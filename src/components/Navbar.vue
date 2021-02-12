@@ -8,7 +8,7 @@
     <router-link class="nav-item" to="/login">Login</router-link>
     </div>
     <div v-else class="authenticated-true nav-menu">
-        <router-link class="nav-item chat-button" :class="{notification: true}" to="/chat">
+        <router-link class="nav-item chat-button" to="/chat">
                 <img src="../assets/message-icon.svg" />
         </router-link>
         <profile-dropdown>
@@ -80,20 +80,6 @@ export default {
     align-items: center;
      & > * {
          margin: 0 0.3rem;
-     }
-     .chat-button {
-         &.notification {
-             &::after {
-                 content: "";
-                 position: absolute;
-                 $dot-size: 0.7rem;
-                 width: $dot-size;
-                 height: $dot-size;
-                 background:#E82F2F;
-                 border-radius: 5rem;
-                 transform: translate(110%, -80%);
-             }
-         }
      }
 }
 

@@ -23,6 +23,7 @@ import VImage from "@/components/VImage";
 import { TextInput } from "@/components/Inputs";
 import { Spinner2 } from "@/components/Spinners";
 import { mapGetters } from "vuex";
+import { bus } from "@/main";
 
 export default {
     name: "Profile",
@@ -46,7 +47,7 @@ export default {
                 await this.$http.put("/api/user/changeAvatar", { avatarImage: this.newImage });
                 this.$store.commit("UPDATE_AVATAR", this.newImage);
             } catch (error) {
-                console.log("ERRR");
+                bus.$emit("changeMessage", "there is a problem with changing avatar", "error");
             }
         }
     }

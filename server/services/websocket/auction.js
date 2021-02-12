@@ -32,7 +32,6 @@ auctionService.placeABid = async function (auctionId, bidPrice, bidAuthor) {
             if (foundAuction.bids.length > 0) {
                 prevTopBidderId = foundAuction.bids[foundAuction.bids.length - 1].author.id.toLocaleString();
                 prevTopBidderId = author.id.toLocaleString() !== prevTopBidderId ? prevTopBidderId : undefined;
-                console.log("!!!!!!!!!! ", prevTopBidderId);
             }
             foundAuction.bids.push(newBid);
             await foundAuction.save();

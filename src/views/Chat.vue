@@ -34,7 +34,7 @@
                             class="room"
                             v-for="(user, index) in searchedUsers.users"
                             :key="user.id"
-                            @click="createChatRoom(user.username, index)"
+                            @click="createChatRoom(user, index)"
                         >
                             <VImage :imageUrl="user.avatar" defaultImage="/default_avatar_image.svg"  />
                             <span class="username">{{user.username}}</span>
@@ -89,12 +89,12 @@ export default {
             this.myChatRooms.spinner = true;
             try {
                 const mychatRoomsFetched = await this.$http.get("/api/chat/my-chat");
-                // const unreadChatRooms = await this.$http.get("/api/chat/unread-messages");
+                const unreadChatRooms = await this.$http.get("/api/chat/unread-messages");
                 this.myChatRooms.spinner = false;
                 this.myChatRooms.rooms = mychatRoomsFetched.data.chatRooms.map(room => {
-                    // if (unreadChatRooms.data.chatRooms.find(unreadRoom => unreadRoom._id === room._id)) {
-                    //     return ({ ...room, unreadMessages: true });
-                    // }
+                    if (unreadChatRooms.data.chatRooms.find(unreadRoom => unreadRoom._id === room._id)) {
+                        return ({ ...room, unreadMessages: true });
+                    }
                     return ({ ...room, unreadMessages: false });
                 });
             } catch (error) {
@@ -118,10 +118,12 @@ export default {
             this.searchQuery = "";
             this.searchedUsers.users = [];
         },
-        async createChatRoom (username, index) {
+        async createChatRoom (user, index) {
             try {
-                const response = await this.$http.post(`/api/chat/${username}`);
+                const response = await this.$http.post(`/api/chat/${user.username}`);
                 const room = response.data.savedChatRoom;
+                room.participants = [{ ...user, avatarImage: user.avatar }];
+                console.log(room);
                 this.myChatRooms.rooms.push(room);
                 this.searchedUsers.users.splice(index, 1);
                 this.clearSearchResults();

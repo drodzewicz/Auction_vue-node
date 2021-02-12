@@ -14,7 +14,7 @@
             <div class="offer-wrapper">
                 <spinner-1 v-if="spinner" />
                 <product-container v-if="!spinner" :auctions=auctions />
-                <router-link v-if="!spinner" to="/auction" class="more">
+                <router-link v-if="!spinner && auctions.length > 7" to="/auction" class="more">
                     <span>More</span>
                     <img src="@/assets/more.svg" alt="more">
                 </router-link>
