@@ -214,6 +214,9 @@ export default {
         & > * {
             margin: 0 2rem;
         }
+        .auction-details {
+            max-width: 23rem;
+        }
         .price {
             background: $main-yellow;
             color: $main-dark-blue;

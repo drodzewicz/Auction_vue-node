@@ -5,7 +5,7 @@ const auctionSchema = new Schema({
     name: {
         type: String,
         required: [true, "field is required"],
-        minlength: [3, "must not be less that 4 charatcters"]
+        minlength: [5, "must not be less that 5 charatcters"]
     },
     description: {
         type: String,

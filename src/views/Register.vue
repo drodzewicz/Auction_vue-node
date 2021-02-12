@@ -92,14 +92,7 @@ export default {
                 this.spinner = false;
                 this.$router.push("/login");
             } catch (err) {
-                const errorMsg = err.response.data.msg;
-                for (const err in errorMsg) {
-                    this.loginFields = this.loginFields.map(field =>
-                        field.name === err
-                            ? { ...field, error: errorMsg[err] }
-                            : field
-                    );
-                }
+                if (err.response.data.err) this.loginFields[0].error = err.response.data.msg.username || "";
                 this.spinner = false;
             }
         },

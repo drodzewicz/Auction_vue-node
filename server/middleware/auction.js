@@ -137,7 +137,7 @@ auctionMiddleware.canUserBuy = function (_req, res, next) {
 };
 auctionMiddleware.isUserAuthor = function (req, res, next) {
     const { author } = res.auction;
-    if (author.username === req.user.username) {
+    if (author.username === req.user.user) {
         return next();
     }
     return res.status(403).json({

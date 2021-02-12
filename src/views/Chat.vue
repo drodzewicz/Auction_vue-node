@@ -123,7 +123,6 @@ export default {
                 const response = await this.$http.post(`/api/chat/${user.username}`);
                 const room = response.data.savedChatRoom;
                 room.participants = [{ ...user, avatarImage: user.avatar }];
-                console.log(room);
                 this.myChatRooms.rooms.push(room);
                 this.searchedUsers.users.splice(index, 1);
                 this.clearSearchResults();

@@ -97,6 +97,7 @@ export default {
                     name: "Name",
                     value: "",
                     validation: {
+                        minLength: 5,
                         required: true
                     }
                 },
