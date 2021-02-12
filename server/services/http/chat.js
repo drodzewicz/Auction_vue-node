@@ -6,25 +6,12 @@ const chatService = {};
 chatService.createARoom = async function (req, res) {
     const { foundUser, user } = req;
     const newChatRoom = new Chat({
-        participants: [
-            {
-                user: {
-                    id: user.id,
-                    username: user.username
-                }
-            },
-            {
-                user: {
-                    id: foundUser.id,
-                    username: foundUser.username
-                }
-            }
-        ]
+        participants: [user.id, foundUser.id]
     });
     try {
         const savedChatRoom = await newChatRoom.save();
         return res.status(200).json({
-            chatRoom: savedChatRoom
+            savedChatRoom
         });
     } catch (error) {
         return res.status(400).json({
@@ -35,7 +22,9 @@ chatService.createARoom = async function (req, res) {
 
 chatService.getMyChatRooms = async function (req, res) {
     try {
-        const foundChatRooms = await Chat.find({ participants: { $elemMatch: { "user.username": req.user.username } } });
+        const foundChatRooms = await Chat.find({
+            participants: req.user.id
+        }).populate("participants");
         res.status(200).json({
             chatRooms: foundChatRooms
         });
@@ -48,11 +37,7 @@ chatService.getMyChatRooms = async function (req, res) {
 chatService.getMyChatRoomsWithUndreadMessages = async function (req, res) {
     try {
         const foundChatRooms = await Chat.find({
-            participants: {
-                $elemMatch: {
-                    "user.username": req.user.username
-                }
-            },
+            participants: req.user.id,
             messages: {
                 $elemMatch: {
                     recieved: false,
@@ -83,31 +68,6 @@ chatService.readUnrecievedMessages = async function (req, res) {
     try {
         await foundRoom.save();
         return res.status(200).json({ msg: `user ${user.username} recieved all unread messages` });
-    } catch (error) {
-        return res.status(400).json({
-            msg: Chat.processErrors(error)
-        });
-    }
-};
-
-chatService.createPost = async function (req, res) {
-    const { foundRoom } = res;
-    const { message, recieved } = req.body;
-    try {
-        const newMessage = {
-            author: {
-                id: req.user.id,
-                username: req.user.username
-            },
-            content: message,
-            recieved: recieved,
-            timeStamp: new Date()
-        };
-        foundRoom.messages.push(newMessage);
-        await foundRoom.save();
-        res.status(200).json({
-            message: newMessage
-        });
     } catch (error) {
         return res.status(400).json({
             msg: Chat.processErrors(error)

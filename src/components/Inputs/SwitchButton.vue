@@ -3,6 +3,7 @@
         <span id="true-label">{{trueLabel}}</span>
         <button
             class="switch-body"
+            type="button"
             :value="isAuction"
             :class="{on: isAuction}"
             @click="toggleSwitchState"

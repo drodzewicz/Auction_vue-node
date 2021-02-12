@@ -1,43 +1,43 @@
 <template>
     <div id="app">
-        <pop-down />
         <navbar />
         <div class="content-container">
             <router-view />
         </div>
+        <Footer />
     </div>
 </template>
 
 <script>
-import Navbar from "./components/Navbar.vue";
-import PopDown from "./components/PopDown.vue";
+import Navbar from "@/components/Navbar.vue";
+import Footer from "@/components/Footer.vue";
 import { bus } from "./main";
 import { mapGetters } from "vuex";
 export default {
     name: "App",
     components: {
         Navbar,
-        PopDown
+        Footer
     },
     created () {
         this.authenticateUser();
     },
     methods: {
-        ...mapGetters(["getUser", "GET_USERID"]),
+        ...mapGetters(["GET_USER", "GET_USERID"]),
         listenForNotification (data) {
-            bus.$emit("changeMessage", `new message from ${data.newMessage}`, "", `/chat/${data.roomId}`);
+            bus.$emit("changeMessage", `new message from ${data.newMessage}`, "");
             bus.$emit("markUnreadMessage", data.roomId);
         },
         listenForBidNotification (data) {
-            bus.$emit("changeMessage", `you have been outbiddet on ${data.auctionName}`, "", `/auction/${data.roomId}`);
+            bus.$emit("changeMessage", `you have been outbiddet on ${data.auctionName}`, "");
         },
         async authenticateUser () {
-            this.$store.watch(() => this.getUser(), () => {
-                if (this.getUser()) {
+            this.$store.watch(() => this.GET_USER().username, () => {
+                if (this.GET_USER().username) {
                     this.$sock.emit("joinUserRoom", { userId: this.GET_USERID() });
                     this.$sock.on("chatUserInfo", this.listenForNotification);
                     this.$sock.on("chatUserBidInfo", this.listenForBidNotification);
-                } else if (this.getUser() == null) {
+                } else if (this.GET_USER().username == null) {
                     this.$sock.removeListener("chatUserInfo", this.listenForNotification);
                     this.$sock.removeListener("chatUserBidInfo", this.listenForBidNotification);
                 }
@@ -46,6 +46,7 @@ export default {
                 const response = await this.$http.get("api/auth/isAuthenticated");
                 this.$sock.open();
                 this.$store.commit("UPDATE_USER", response.data.user);
+                this.$store.commit("UPDATE_AVATAR", response.data.avatarImage || "");
                 this.$store.commit("UPDATE_USERID", response.data.id);
             } catch (error) {
                 this.$store.commit("UPDATE_USER", null);
@@ -62,17 +63,14 @@ body {
     padding: 0;
     margin: 0;
     font-family: "Secular One", sans-serif;
+    overflow-y: scroll;
 }
 #app {
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
 }
 .content-container {
-    margin: 0.4rem 2rem;
-    transition: all 0.3s ease-in-out;
-    @include mobile {
-        margin: 0.4rem 0.8rem;
-    }
+    position: relative;
+    min-height: calc(100vh - 8rem);
 }
 </style>

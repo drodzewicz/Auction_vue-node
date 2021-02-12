@@ -28,15 +28,16 @@ auctionService.placeABid = async function (auctionId, bidPrice, bidAuthor) {
                 timeStamp: new Date()
             };
             foundAuction.buyer = author;
-            let prevTopBidder;
+            let prevTopBidderId;
             if (foundAuction.bids.length > 0) {
-                prevTopBidder = foundAuction.bids[foundAuction.bids.length - 1].author.id;
+                prevTopBidderId = foundAuction.bids[foundAuction.bids.length - 1].author.id.toLocaleString();
+                prevTopBidderId = author.id.toLocaleString() !== prevTopBidderId ? prevTopBidderId : undefined;
             }
             foundAuction.bids.push(newBid);
             await foundAuction.save();
             return {
                 newBid,
-                prevTopBidder: author.id.toLocaleString() !== prevTopBidder.toLocaleString() ? prevTopBidder.toLocaleString() : undefined,
+                prevTopBidderId,
                 auctionName: foundAuction.name
             };
         }

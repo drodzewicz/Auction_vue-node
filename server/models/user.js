@@ -13,6 +13,9 @@ const userSchema = new Schema({
         type: String,
         minlength: [4, "must not be less that 4 charatcters"],
         required: [true, "password is required"]
+    },
+    avatarImage: {
+        type: String
     }
 });
 

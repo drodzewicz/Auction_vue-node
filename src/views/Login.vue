@@ -1,8 +1,10 @@
 <template>
-    <div class="box">
-        <div class="login-container">
-            <h2>Login</h2>
-
+    <div class="login-container">
+        <h2 class="form-title">
+            <img src="@/assets/lock-icon.svg" alt="lock" >
+            <span>Login</span>
+        </h2>
+        <form class="login-form">
             <text-input
                 v-for="field in loginFields"
                 v-model="field.value"
@@ -15,17 +17,19 @@
                 v-on:validateField="validateFieldLogin"
             />
             <button class="primary-btn" type="submit" :disabled="!isReadyToSent || spinner" @click="login">
-              Login
-              <spinner-2 v-if="spinner"/>
+                Login
+                <spinner-2 v-if="spinner"/>
             </button>
-        </div>
+            <router-link id="registration-link" to="/register">Dont't have an account ?</router-link>
+        </form>
     </div>
 </template>
 
 <script>
 import { TextInput } from "@/components/Inputs";
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations } from "vuex";
 import { Spinner2 } from "@/components/Spinners";
+
 export default {
     name: "Login",
     components: {
@@ -38,7 +42,7 @@ export default {
             loginFields: [
                 {
                     isValid: false,
-                    name: "username",
+                    name: "Username",
                     value: "",
                     error: "",
                     validation: {
@@ -48,7 +52,7 @@ export default {
                 },
                 {
                     isValid: false,
-                    name: "password",
+                    name: "Password",
                     value: "",
                     error: "",
                     type: "password",
@@ -61,8 +65,7 @@ export default {
         };
     },
     methods: {
-        ...mapGetters(["getUser"]),
-        ...mapMutations(["UPDATE_USER", "UPDATE_USERID"]),
+        ...mapMutations(["UPDATE_USER", "UPDATE_AVATAR", "UPDATE_USERID"]),
         validateFieldLogin (fieldName, val) {
             this.loginFields = this.loginFields.map(field => {
                 if (fieldName === field.name) {
@@ -72,7 +75,8 @@ export default {
                 }
             });
         },
-        async login () {
+        async login (event) {
+            event.preventDefault();
             this.spinner = true;
             try {
                 const response = await this.$http.post("/api/auth/login", {
@@ -80,6 +84,7 @@ export default {
                     password: this.loginFields[1].value
                 });
                 this.UPDATE_USER(response.data.user.username);
+                this.UPDATE_AVATAR(response.data.user.avatarImage || "");
                 this.UPDATE_USERID(response.data.user.id);
                 this.$sock.open();
                 this.spinner = false;
@@ -106,28 +111,48 @@ export default {
 </script>
 
 <style lang="scss">
-.login-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 25rem;
+    .login-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 3rem;
 
-    .text-input {
-        width: 20rem;
-
-        @include mobile {
-            width: 100%;
+        .form-title {
+            $font-size: 1.3rem;
+             background: #ECEBF1;
+             color: $main-dark-blue;
+             padding: 0.2rem 1rem;
+             border-radius: 5px;
+             display: flex;
+             flex-direction: row;
+             place-items: center;
+             margin-bottom: 2rem;
+             img {
+                 height: $font-size;
+                 width: $font-size;
+                 margin-right: 0.4rem;
+             }
+             span {
+                 font-size: $font-size;
+             }
+        }
+        .login-form {
+            min-width: 15rem;
+            max-width: 50rem;
+            display: flex;
+            flex-direction: column;
+            .primary-btn {
+                align-self: center;
+                .spinner-2 {
+                    position: absolute;
+                }
+            }
+        }
+        #registration-link {
+            color: $main-dark-blue;
+            align-self: center;
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
         }
     }
-
-    .primary-btn {
-        margin-top: 1rem;
-        font-size: 1.5rem;
-        position: relative;
-        .spinner-2 {
-          position: absolute;
-        }
-    }
-}
 </style>

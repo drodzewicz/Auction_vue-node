@@ -13,6 +13,12 @@ export default {
 </script>
 
 <style lang="scss">
+.spinner-1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 @keyframes ldio-l1cpb39xxx-1 {
   0% { top: 21.06px; height: 74.88px }
   50% { top: 35.099999999999994px; height: 46.8px }

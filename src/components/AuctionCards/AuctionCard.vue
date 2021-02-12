@@ -124,7 +124,6 @@ $card-width: 20rem;
     display: flex;
     flex-direction: column;
     border-radius: 15px;
-    margin: 1.5rem 0.5rem;
     width: $card-width;
     height: $card-height;
     position: relative;
@@ -162,8 +161,8 @@ $card-width: 20rem;
         transition: all 0.3s ease-in-out;
 
         .price {
-            background: $main-dark-blue;
-            color: white;
+            background: $main-yellow;
+            color: $main-dark-blue;
             height: 100%;
             display: flex;
             align-items: center;

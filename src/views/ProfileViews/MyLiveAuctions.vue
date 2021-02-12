@@ -1,10 +1,12 @@
 <template>
-    <div class="live-auctioncontainer">
-        <h2>Live auctions</h2>
-        <spinner-1 v-if="myLiveAuctions.spinner"/>
-        <div v-if="!myLiveAuctions.spinner">
+    <profile-sub-page
+        emptyPlaceholder="There are no live auctions"
+        :isEmpty="auctions.length === 0"
+        title="Live Auctions"
+        :isLoading="isLoading">
+        <div slot="content">
             <auction-card-live
-                v-for="auction in myLiveAuctions.auctions"
+                v-for="auction in auctions"
                 :key="auction._id"
                 :id="auction._id"
                 :name="auction.name"
@@ -14,27 +16,23 @@
                 :bids="auction.bids"
             />
         </div>
-    </div>
+    </profile-sub-page>
 </template>
 
 <script>
 import { AuctionCardLive } from "@/components/AuctionCards";
-import { Spinner1 } from "@/components/Spinners";
+import ProfileSubPage from "./ProfileSubPage";
 
 export default {
     name: "MyLiveAuctions",
     components: {
         AuctionCardLive,
-        Spinner1
+        ProfileSubPage
     },
     data () {
         return {
-            myAuctionPage: 1,
-            myLiveAuctions: {
-                auctions: [],
-                spinner: true
-            },
-            searchQuery: ""
+            auctions: [],
+            isLoading: true
         };
     },
     created () {
@@ -42,23 +40,15 @@ export default {
     },
     methods: {
         async getAllParticipatedInAuction () {
-            this.myLiveAuctions.spinner = true;
+            this.isLoading = true;
             try {
                 const response = await this.$http.get("/api/user/live-auctions");
-                this.myLiveAuctions.auctions = response.data.auctions;
-                this.myLiveAuctions.spinner = false;
+                this.auctions = response.data.auctions;
+                this.isLoading = false;
             } catch (error) {
-                this.myLiveAuctions.spinner = false;
+                this.isLoading = false;
             }
         }
     }
 };
 </script>
-
-<style lang="scss">
-.live-auctioncontainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-</style>

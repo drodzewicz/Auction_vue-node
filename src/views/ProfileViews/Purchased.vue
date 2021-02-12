@@ -1,49 +1,47 @@
 <template>
-    <div class="purhased-auction-container">
-        <h2>Purchased auctions</h2>
-        <spinner-1 v-if="auctions.spinner"/>
-        <div v-if="!auctions.spinner" class="aucion-box">
+    <profile-sub-page :isEmpty="products.length === 0" title="Purchases" :isLoading="isLoading">
+        <div class="aucion-box" slot="content">
             <auction-card-mini
-                v-for="li in auctions.list"
-                :key="li._id"
-                :id="li._id"
-                :name="li.name"
-                :descriptions="li.description"
-                :image="li.image"
-                :price="li.price"
-                :endDate="new Date(li.endDate)"
-            />
-            <pagination
-                :currentPage="auctions.currentPage"
-                :prev="auctions.prevPage"
-                :next="auctions.nextPage"
-                v-model="auctions.currentPage"
+                v-for="auction in products"
+                :key="auction._id"
+                :id="auction._id"
+                :name="auction.name"
+                :image="auction.image"
+                :price="auction.price"
+                :endDate="auction.endDate"
+                :buyer="auction.buyer"
             />
         </div>
-    </div>
+            <pagination
+                slot="pagination"
+                :currentPage="currentPage"
+                :prev="prevPage"
+                :next="nextPage"
+                v-model="currentPage"
+            />
+    </profile-sub-page>
 </template>
 
 <script>
 import AuctionCardMini from "@/components/AuctionCards/AuctionCardMini";
 import Pagination from "@/components/Pagination";
-import { bus } from "../../main";
-import { Spinner1 } from "@/components/Spinners";
+import ProfileSubPage from "./ProfileSubPage";
+import { bus } from "@/main";
+
 export default {
     name: "Purchased",
     components: {
         AuctionCardMini,
         Pagination,
-        Spinner1
+        ProfileSubPage
     },
     data () {
         return {
-            auctions: {
-                nextPage: null,
-                prevPage: null,
-                currentPage: 1,
-                list: [],
-                spinner: true
-            }
+            nextPage: null,
+            prevPage: null,
+            currentPage: 1,
+            products: [],
+            isLoading: true
         };
     },
     created () {
@@ -51,22 +49,22 @@ export default {
     },
     methods: {
         async getAllPurchases () {
-            this.auctions.spinner = true;
+            this.isLoading = true;
             try {
-                const response = await this.$http.get(`/api/user/purchased?limit=5&page=${this.auctions.currentPage}`);
-                this.auctions.list = response.data.auctions.items;
-                this.auctions.nextPage = response.data.auctions.next;
-                this.auctions.prevPage = response.data.auctions.prev;
-                this.auctions.spinner = false;
+                const response = await this.$http.get(`/api/user/purchased?limit=5&page=${this.currentPage}`);
+                this.products = response.data.auctions.items;
+                this.nextPage = response.data.auctions.next;
+                this.prevPage = response.data.auctions.prev;
+                this.isLoading = false;
             } catch (error) {
-                this.auctions.spinner = false;
+                this.isLoading = false;
                 bus.$emit("changeMessage", "failed to load purchases", "error");
             }
         }
     },
     computed: {
         getCurrentPage () {
-            return this.auctions.currentPage;
+            return this.currentPage;
         }
     },
     watch: {
@@ -77,32 +75,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.purhased-auction-container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .aucion-box{
-    width: 100%;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        @include breaking-point-md {
-            grid-template-columns: 1fr;
-        }
-        justify-content: center;
-        align-items: center;
-        max-width: 60rem;
-        .auction-link-mini {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .pagination-container {
-            grid-column: 1/3;
-            @include breaking-point-md {
-                grid-column: auto;
-            }
-        }
-    }
-}
+<style>
 </style>

@@ -50,7 +50,7 @@ export default {
 
     padding: 0.2rem 0.6rem;
     margin: 0.4rem;
-    border-radius: 10px;
+    border-radius: 5px;
     box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.238);
     overflow: hidden;
     width: 15rem;
