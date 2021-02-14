@@ -41,10 +41,10 @@ auctionService.getAuctions = async function (req, res) {
 
 auctionService.getLoggedInUserAuctions = async function (req, res) {
     const { page, limit, purchased } = req.query;
-    let searchQuery = { "author.username": req.user.user };
+    let searchQuery = { author: req.user.id };
 
     if (purchased !== undefined && purchased.toUpperCase() === "TRUE") {
-        searchQuery = { "buyer.username": req.user.user };
+        searchQuery = { "buyer.id": req.user.id };
     };
 
     if (page !== undefined && limit !== undefined) {
@@ -68,7 +68,7 @@ auctionService.getLoggedInUserAuctions = async function (req, res) {
 
 auctionService.getLoggedInUserParticipatedAuctions = async function (req, res) {
     const { page, limit } = req.query;
-    const searchQuery = { bids: { $elemMatch: { "author.username": req.user.user } } };
+    const searchQuery = { bids: { $elemMatch: { author: req.user.id } } };
 
     if (page !== undefined && limit !== undefined) {
         const paginatedAuctions = await paginateConetnt(Auction, page, limit, searchQuery);
@@ -91,7 +91,7 @@ auctionService.getLoggedInUserParticipatedAuctions = async function (req, res) {
 
 auctionService.getLoggedInUserLiveAuctions = async function (req, res) {
     const timeNow = new Date();
-    const searchQuery = { startDate: { $lt: timeNow }, endDate: { $gt: timeNow }, bids: { $elemMatch: { "author.username": req.user.user } } };
+    const searchQuery = { startDate: { $lt: timeNow }, endDate: { $gt: timeNow }, bids: { $elemMatch: { author: req.user.id } } };
     try {
         const allAuctions = await Auction.find(searchQuery);
         return res.status(200).json({
@@ -107,7 +107,7 @@ auctionService.getLoggedInUserLiveAuctions = async function (req, res) {
 auctionService.getLoggedInUserPurchases = async function (req, res) {
     const { page, limit } = req.query;
     const timeNow = new Date();
-    const searchQuery = { "buyer.username": req.user.user, endDate: { $not: { $gt: timeNow } } };
+    const searchQuery = { "buyer.id": req.user.id, endDate: { $not: { $gt: timeNow } } };
 
     if (page !== undefined && limit !== undefined) {
         const paginatedAuctions = await paginateConetnt(Auction, page, limit, searchQuery);
