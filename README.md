@@ -39,7 +39,7 @@ npm start
 
 ## Enviroment variables
 *application requires an **.env** file which contains:*
-### Server
+
 > **DBURI**: *database URI* - **is required**
 <br> **PORT**: *server port* - **default is 3000**
 <br> **APP_SECRET**: *secret that will be used to encrypt passwords*
