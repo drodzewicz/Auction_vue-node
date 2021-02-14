@@ -2,7 +2,7 @@
     <div class="home-container">
         <div class="landing-page-cover">
             <div class="welcome-container">
-                <h1 class="welcome">Welcome to Bidder!</h1>
+                <h1 class="welcome">Welcome to Bidit!</h1>
                 <h3 class="welcome-text">Here you will find what you are looking for.</h3>
                 <h3 class="welcome-text">Auction, buy and win !</h3>
             </div>
