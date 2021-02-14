@@ -68,7 +68,7 @@ auctionService.getLoggedInUserAuctions = async function (req, res) {
 
 auctionService.getLoggedInUserParticipatedAuctions = async function (req, res) {
     const { page, limit } = req.query;
-    const searchQuery = { bids: { $elemMatch: { author: req.user.id } } };
+    const searchQuery = { bids: { $elemMatch: { "author.id": req.user.id } } };
 
     if (page !== undefined && limit !== undefined) {
         const paginatedAuctions = await paginateConetnt(Auction, page, limit, searchQuery);
@@ -91,7 +91,7 @@ auctionService.getLoggedInUserParticipatedAuctions = async function (req, res) {
 
 auctionService.getLoggedInUserLiveAuctions = async function (req, res) {
     const timeNow = new Date();
-    const searchQuery = { startDate: { $lt: timeNow }, endDate: { $gt: timeNow }, bids: { $elemMatch: { author: req.user.id } } };
+    const searchQuery = { startDate: { $lt: timeNow }, endDate: { $gt: timeNow }, bids: { $elemMatch: { "author.id": req.user.id } } };
     try {
         const allAuctions = await Auction.find(searchQuery);
         return res.status(200).json({
