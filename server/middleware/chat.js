@@ -11,7 +11,7 @@ chatMiddleware.checkIfChatRoomExists = async function (req, res, next) {
                 {
                     participants: {
                         $elemMatch: {
-                            "user.username": req.user.username
+                            "user.username": req.user.user
                         }
                     }
                 },

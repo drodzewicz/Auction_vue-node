@@ -41,7 +41,7 @@ chatService.getMyChatRoomsWithUndreadMessages = async function (req, res) {
             messages: {
                 $elemMatch: {
                     recieved: false,
-                    "author.username": { $ne: req.user.username }
+                    "author.username": { $ne: req.user.user }
                 }
             }
         }, "_id");
