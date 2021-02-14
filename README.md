@@ -1,38 +1,56 @@
 # Bidit - Auction service
+[**Live Preview**](https://auction-bidit.herokuapp.com)
 
-**BidIt** is a web application built using Express and MongoDB on Backend, and Vue.js on Frotnend. 
-<br> Final project for *Web Technologies* course.
-<br> This application can be operated using frontend app created in Vue ( uses passport-local strategy for authentication in clinet ) or any other client like Postman using seperate external API (external API uses passport-JWT strategy fro authentication).
-<br>**demo version: https://auction-bidit.herokuapp.com**
-### Application fetures:
-* Creating an auction ``two types: time limited or buy now``
-* Full CRUD on auctions ``editing and deleting an auction can only be done before auction starts or if it's of type buy now before someone buys it ``
-* Backend and frontend pagination
-* Chat using socket.io ``application has a chat tab where you can search a user by username and message them directly``
-* Notification ``if you are not focused on the chat, you will get a notification that you got a new message or if you have been outbiddet by someone on an auction you also get a notification that you can click and get redirected to show page of that auction``
-* Live bidding ``when auction starts, logged in users have access to bidding on an item. Bids are displayed live (using socket.io) to each logged in user``
+**BidIt** is a web application built using Express and MongoDB on Backend, and Vue.js on Frotnend.
+This is a online shopping site with consumer to consumer sales. On this website users can either sell or auction their products and other users can participate in set auctions.
+Site has also built in live chat where users can contact each other in case a user has any questions to the seller or maybe to discuss sold item shipping.
 
-### Install dependencies
+
+![](https://github.com/DaRoTP/Auction_vue-node/blob/master/images/auction-ss.png?raw=true)
+
+![](https://github.com/DaRoTP/Auction_vue-node/blob/master/images/chat-ss.png?raw=true)
+
+### Application functionality:
+* User authentication using cookies.
+* Place item either for sale or auction.
+* Auction managment.
+* Live auction bidding.
+* Live chat with other users.
+
+
+### Run application
 
 ```sh
+# install dependencies
 npm install
-```
 
-### Running app
-
-```sh
+# DEVELOPMENT
+# run server
 npm run dev
+# run client
+npm run serve
+
+# PRODUCTION
+# build client
+npm run build
+# run app
+npm start
 ```
-> application requires a **.env** file which has to contain:
-<br> DBURI: *Database URI*
-<br> PORT: *clinet port*
-<br> SERVER_PORT: *babckend server port*
-<br> APP_SECRET: *secret that will be used to encrypt passwords and tokens*
-<br> NODE_ENV: *[ production | development ]*
+
+## Enviroment variables
+*application requires an **.env** file which contains:*
+### Server
+> **DBURI**: *database URI* - **is required**
+<br> **PORT**: *server port* - **default is 3000**
+<br> **APP_SECRET**: *secret that will be used to encrypt passwords*
+<br> **VUE_APP_API_URL**: 
+  * **DEVELOPMENT**: *required*
+  * **PRODUCTION**: *default is '/'*
+ 
 
 ## Used Technologies
 ### Backend
-* [Node.js](https://nodejs.org) - pen-source, cross-platform JavaScript run-time environment for executing JavaScript code server-side
+* [Node.js](https://nodejs.org) - pen-source, cross-platform JavaScript run-time environment for executing JavaScript code server-side.
 * [Express.js](https://expressjs.com) - for building web applications, APIs and connecting middleware.
 * [MongoDB](https://www.mongodb.com) - NoSQL database for data storage.
 * [Mongoose](http://mongoosejs.com/)  - ODM library for MongoDB and Node.js.
@@ -46,7 +64,7 @@ npm run dev
 * [socket.io](https://www.npmjs.com/package/socket.io) - Socket.IO enables real-time bidirectional event-based communication.
 
 ### Frontend
-* [Vue.js](https://vuejs.org/v2/guide/) - framework fro building user interfaces.
+* [Vue.js](https://vuejs.org/v2/guide/) - framework for building user interfaces.
 * [SASS](https://sass-lang.com/) - used for styling HTML.
 * [moment](https://momentjs.com/) - simple date formatter
 * [axios](https://github.com/axios/axios) - Promise based HTTP client for the browser and node.js
